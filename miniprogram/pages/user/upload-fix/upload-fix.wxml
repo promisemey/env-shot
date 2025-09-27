@@ -1,0 +1,88 @@
+<!--pages/user/upload-fix/upload-fix.wxml-->
+<view class="upload-fix-container">
+  <!-- 问题信息 -->
+  <view class="problem-info" wx:if="{{problemInfo}}">
+    <view class="problem-header">
+      <text class="problem-title">{{problemInfo.title}}</text>
+      <view class="problem-status {{problemInfo.status}}">
+        <text class="status-text">{{problemInfo.statusText}}</text>
+      </view>
+    </view>
+    
+    <text class="problem-desc">{{problemInfo.description}}</text>
+    
+    <view class="problem-meta">
+      <view class="meta-item">
+        <text class="meta-label">分类:</text>
+        <text class="meta-value">{{problemInfo.categoryText}}</text>
+      </view>
+      <view class="meta-item">
+        <text class="meta-label">严重程度:</text>
+        <text class="meta-value severity-{{problemInfo.severity}}">{{problemInfo.severityText}}</text>
+      </view>
+    </view>
+    
+    <view class="problem-photos">
+      <text class="photos-label">问题照片:</text>
+      <view class="photos-grid">
+        <image 
+          wx:for="{{problemInfo.photos}}" 
+          wx:key="*this" 
+          src="{{item}}" 
+          mode="aspectFill"
+          bindtap="previewPhoto" 
+          data-photos="{{problemInfo.photos}}" 
+          data-current="{{item}}"
+        ></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 整改照片上传 -->
+  <view class="fix-photos-section">
+    <view class="section-header">
+      <text class="section-title">整改照片 *</text>
+      <text class="photo-count">{{fixPhotos.length}}/9</text>
+    </view>
+    
+    <view class="photo-grid">
+      <view class="photo-item" wx:for="{{fixPhotos}}" wx:key="index">
+        <image src="{{item}}" mode="aspectFill" bindtap="previewFixPhoto" data-index="{{index}}"></image>
+        <view class="photo-delete" bindtap="deleteFixPhoto" data-index="{{index}}">
+          <text class="delete-icon">×</text>
+        </view>
+      </view>
+      
+      <view class="photo-add" wx:if="{{fixPhotos.length < 9}}" bindtap="chooseFixPhoto">
+        <text class="add-icon">+</text>
+        <text class="add-text">添加照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 整改描述 -->
+  <view class="fix-description-section">
+    <view class="section-header">
+      <text class="section-title">整改描述</text>
+    </view>
+    
+    <textarea 
+      class="fix-textarea" 
+      placeholder="请描述整改过程和结果（可选）" 
+      value="{{fixDescription}}" 
+      bindinput="onDescriptionInput"
+      maxlength="200"
+    ></textarea>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button 
+      class="submit-btn {{submitDisabled ? 'disabled' : ''}}" 
+      bindtap="submitFix"
+      disabled="{{submitDisabled}}"
+    >
+      {{submitBtnText}}
+    </button>
+  </view>
+</view>

@@ -1,0 +1,141 @@
+<!--pages/admin/problem-monitor/problem-monitor.wxml-->
+<view class="monitor-container">
+  <!-- 统计概览 -->
+  <view class="stats-overview">
+    <view class="stats-title">
+      <text class="title">问题监控概览</text>
+      <text class="refresh-btn" bindtap="refreshData">刷新</text>
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-number">{{overviewStats.total}}</text>
+        <text class="stats-label">总问题数</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{overviewStats.pending}}</text>
+        <text class="stats-label">待处理</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{overviewStats.processing}}</text>
+        <text class="stats-label">处理中</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{overviewStats.fixed}}</text>
+        <text class="stats-label">已整改</text>
+      </view>
+    </view>
+    
+    <view class="fix-rate">
+      <text class="rate-label">整改率</text>
+      <text class="rate-value">{{overviewStats.fixRate}}%</text>
+    </view>
+  </view>
+
+  <!-- 筛选条件 -->
+  <view class="filter-section">
+    <view class="filter-row">
+      <picker 
+        class="filter-picker" 
+        range="{{communities}}" 
+        range-key="name" 
+        value="{{selectedCommunityIndex}}" 
+        bindchange="onCommunityChange"
+      >
+        <view class="picker-display">
+          <text class="picker-text">{{selectedCommunityText}}</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+      
+      <picker 
+        class="filter-picker" 
+        range="{{statusOptions}}" 
+        range-key="label" 
+        value="{{selectedStatusIndex}}" 
+        bindchange="onStatusChange"
+      >
+        <view class="picker-display">
+          <text class="picker-text">{{selectedStatusText}}</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 问题列表 -->
+  <view class="problem-list">
+    <view class="list-header">
+      <text class="list-title">问题列表</text>
+      <text class="list-count">共{{problems.length}}个问题</text>
+    </view>
+
+    <view class="problem-item" wx:for="{{problems}}" wx:key="id" bindtap="viewProblemDetail" data-id="{{item.id}}">
+      <view class="problem-header">
+        <text class="problem-title">{{item.title}}</text>
+        <view class="problem-status {{item.status}}">
+          <text class="status-text">{{item.statusText}}</text>
+        </view>
+      </view>
+      
+      <text class="problem-desc">{{item.description}}</text>
+      
+      <view class="problem-meta">
+        <view class="meta-item">
+          <text class="meta-label">社区:</text>
+          <text class="meta-value">{{item.communityName}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">分类:</text>
+          <text class="meta-value">{{item.categoryText}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">严重程度:</text>
+          <text class="meta-value severity-{{item.severity}}">{{item.severityText}}</text>
+        </view>
+      </view>
+      
+      <view class="problem-photos">
+        <image 
+          wx:for="{{item.photos}}" 
+          wx:key="*this" 
+          src="{{item}}" 
+          mode="aspectFill"
+          bindtap="previewPhoto" 
+          data-photos="{{item.photos}}" 
+          data-current="{{item}}"
+        ></image>
+      </view>
+      
+      <view class="problem-footer">
+        <text class="problem-time">{{item.createTime}}</text>
+        <view class="problem-actions">
+          <view class="action-btn" wx:if="{{item.status === 'pending'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="processing" catchtap="true">
+            <text class="action-text">开始处理</text>
+          </view>
+          <view class="action-btn" wx:if="{{item.status === 'processing'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="fixed" catchtap="true">
+            <text class="action-text">标记整改</text>
+          </view>
+          <view class="action-btn" wx:if="{{item.status === 'fixed'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="closed" catchtap="true">
+            <text class="action-text">关闭问题</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{problems.length === 0 && !loading}}">
+      <text class="empty-icon">📊</text>
+      <text class="empty-text">暂无问题数据</text>
+      <text class="empty-desc">当前筛选条件下没有找到问题</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+</view>

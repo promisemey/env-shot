@@ -1,0 +1,100 @@
+<!--pages/user/problem-list/problem-list.wxml-->
+<view class="problem-list-container">
+  <!-- 筛选栏 -->
+  <view class="filter-section">
+    <view class="filter-tabs">
+      <view 
+        class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}" 
+        bindtap="changeFilter" 
+        data-filter="all"
+      >
+        <text class="tab-text">全部</text>
+      </view>
+      <view 
+        class="filter-tab {{currentFilter === 'pending' ? 'active' : ''}}" 
+        bindtap="changeFilter" 
+        data-filter="pending"
+      >
+        <text class="tab-text">待处理</text>
+      </view>
+      <view 
+        class="filter-tab {{currentFilter === 'processing' ? 'active' : ''}}" 
+        bindtap="changeFilter" 
+        data-filter="processing"
+      >
+        <text class="tab-text">处理中</text>
+      </view>
+      <view 
+        class="filter-tab {{currentFilter === 'fixed' ? 'active' : ''}}" 
+        bindtap="changeFilter" 
+        data-filter="fixed"
+      >
+        <text class="tab-text">已整改</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 问题列表 -->
+  <view class="problem-list">
+    <view class="problem-item" wx:for="{{problems}}" wx:key="id" bindtap="viewProblemDetail" data-id="{{item.id}}">
+      <view class="problem-header">
+        <text class="problem-title">{{item.title}}</text>
+        <view class="problem-status {{item.status}}">
+          <text class="status-text">{{item.statusText}}</text>
+        </view>
+      </view>
+      
+      <text class="problem-desc">{{item.description}}</text>
+      
+      <view class="problem-meta">
+        <view class="meta-item">
+          <text class="meta-label">分类:</text>
+          <text class="meta-value">{{item.categoryText}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">严重程度:</text>
+          <text class="meta-value severity-{{item.severity}}">{{item.severityText}}</text>
+        </view>
+      </view>
+      
+      <view class="problem-photos">
+        <image 
+          wx:for="{{item.photos}}" 
+          wx:for-item="photo" 
+          wx:key="*this" 
+          src="{{photo}}" 
+          mode="aspectFill"
+          bindtap="previewPhoto" 
+          data-photos="{{item.photos}}" 
+          data-current="{{photo}}"
+        ></image>
+      </view>
+      
+      <view class="problem-footer">
+        <text class="problem-time">{{item.createTime}}</text>
+        <view class="problem-actions">
+          <view class="action-btn" wx:if="{{item.status === 'pending' || item.status === 'processing'}}" bindtap="uploadFix" data-id="{{item.id}}" catchtap="true">
+            <text class="action-text">上传整改</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{problems.length === 0 && !loading}}">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无问题记录</text>
+      <text class="empty-desc">当前筛选条件下没有找到问题</text>
+    </view>
+
+    <!-- 加载状态 -->
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </view>
+
+  <!-- 加载更多 -->
+  <view class="load-more" wx:if="{{hasMore && !loading}}">
+    <button class="load-more-btn" bindtap="loadMore">加载更多</button>
+  </view>
+</view>

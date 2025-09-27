@@ -1,0 +1,115 @@
+<!--pages/admin/problem-upload/problem-upload.wxml-->
+<view class="upload-container">
+  <!-- 当前社区信息 -->
+  <view class="community-info" wx:if="{{selectedCommunity}}">
+    <view class="community-header">
+      <text class="community-title">当前社区</text>
+      <text class="change-btn" bindtap="changeCommunity">切换</text>
+    </view>
+    <text class="community-name">{{selectedCommunity.name}}</text>
+    <text class="community-address">{{selectedCommunity.address}}</text>
+  </view>
+
+  <!-- 问题信息表单 -->
+  <view class="form-section">
+    <view class="form-item">
+      <text class="form-label">问题标题 *</text>
+      <input 
+        class="form-input" 
+        placeholder="请输入问题标题" 
+        value="{{problemData.title}}" 
+        bindinput="onTitleInput"
+        maxlength="50"
+      />
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">问题描述 *</text>
+      <textarea 
+        class="form-textarea" 
+        placeholder="请详细描述发现的环境问题" 
+        value="{{problemData.description}}" 
+        bindinput="onDescriptionInput"
+        maxlength="200"
+      ></textarea>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">问题分类 *</text>
+      <picker 
+        class="form-picker" 
+        range="{{categoryOptions}}" 
+        range-key="label" 
+        value="{{problemData.categoryIndex}}" 
+        bindchange="onCategoryChange"
+      >
+        <view class="picker-display">
+          <text class="picker-text">{{problemData.categoryText}}</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <text class="form-label">严重程度 *</text>
+      <picker 
+        class="form-picker" 
+        range="{{severityOptions}}" 
+        range-key="label" 
+        value="{{problemData.severityIndex}}" 
+        bindchange="onSeverityChange"
+      >
+        <view class="picker-display">
+          <text class="picker-text">{{problemData.severityText}}</text>
+          <text class="picker-arrow">></text>
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 照片上传 -->
+  <view class="photo-section">
+    <view class="section-header">
+      <text class="section-title">问题照片 *</text>
+      <text class="photo-count">{{photos.length}}/9</text>
+    </view>
+    
+    <view class="photo-grid">
+      <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+        <image src="{{item}}" mode="aspectFill" bindtap="previewPhoto" data-index="{{index}}"></image>
+        <view class="photo-delete" bindtap="deletePhoto" data-index="{{index}}">
+          <text class="delete-icon">×</text>
+        </view>
+      </view>
+      
+      <view class="photo-add" wx:if="{{photos.length < 9}}" bindtap="choosePhoto">
+        <text class="add-icon">+</text>
+        <text class="add-text">添加照片</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 位置信息 -->
+  <view class="location-section">
+    <view class="section-header">
+      <text class="section-title">位置信息</text>
+      <text class="location-btn" bindtap="getCurrentLocation">获取位置</text>
+    </view>
+    
+    <view class="location-info" wx:if="{{location}}">
+      <text class="location-address">{{location.address}}</text>
+      <text class="location-coords">经度: {{location.longitude}}, 纬度: {{location.latitude}}</text>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button 
+      class="submit-btn {{submitDisabled ? 'disabled' : ''}}" 
+      bindtap="submitProblem"
+      disabled="{{submitDisabled}}"
+    >
+      {{submitBtnText}}
+    </button>
+  </view>
+</view>

@@ -1,0 +1,114 @@
+<!--pages/user/user.wxml-->
+<view class="user-container">
+  <!-- 用户信息头部 -->
+  <view class="user-header">
+    <view class="user-info">
+      <image class="user-avatar" src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+      <view class="user-details">
+        <text class="user-name">{{userInfo.name || '用户'}}</text>
+        <text class="user-phone">{{userInfo.phone}}</text>
+        <text class="user-role">社区用户</text>
+      </view>
+    </view>
+    <view class="user-actions">
+      <view class="action-btn" bindtap="editProfile">
+        <text class="action-text">编辑</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 社区信息 -->
+  <view class="community-info" wx:if="{{userCommunity}}">
+    <view class="community-header">
+      <text class="community-title">所属社区</text>
+    </view>
+    <text class="community-name">{{userCommunity.name}}</text>
+    <text class="community-address">{{userCommunity.address}}</text>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="user-menu">
+    <view class="menu-item" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
+      <view class="menu-icon">
+        <text class="icon">📋</text>
+      </view>
+      <view class="menu-content">
+        <text class="menu-title">问题列表</text>
+        <text class="menu-desc">查看社区环境问题</text>
+      </view>
+      <view class="menu-arrow">
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="menu-item" bindtap="navigateTo" data-url="/pages/user/upload-fix/upload-fix">
+      <view class="menu-icon">
+        <text class="icon">✅</text>
+      </view>
+      <view class="menu-content">
+        <text class="menu-title">上传整改</text>
+        <text class="menu-desc">上传问题整改照片</text>
+      </view>
+      <view class="menu-arrow">
+        <text class="arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="user-stats">
+    <view class="stats-title">
+      <text class="title">我的贡献</text>
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-number">{{userStats.reportedProblems}}</text>
+        <text class="stats-label">上报问题</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{userStats.fixedProblems}}</text>
+        <text class="stats-label">整改问题</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{userStats.pendingProblems}}</text>
+        <text class="stats-label">待整改</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近活动 -->
+  <view class="recent-activity">
+    <view class="activity-header">
+      <text class="activity-title">最近活动</text>
+      <text class="more-btn" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">更多 ></text>
+    </view>
+    
+    <view class="activity-list">
+      <view class="activity-item" wx:for="{{recentActivities}}" wx:key="id">
+        <view class="activity-icon">
+          <text class="icon">{{item.icon}}</text>
+        </view>
+        <view class="activity-content">
+          <text class="activity-title">{{item.title}}</text>
+          <text class="activity-desc">{{item.description}}</text>
+          <text class="activity-time">{{item.time}}</text>
+        </view>
+        <view class="activity-status {{item.status}}">
+          <text class="status-text">{{item.statusText}}</text>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{recentActivities.length === 0}}">
+        <text class="empty-text">暂无活动记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+</view>

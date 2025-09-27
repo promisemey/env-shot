@@ -1,0 +1,88 @@
+<!--pages/admin/admin.wxml-->
+<view class="admin-container">
+  <!-- 顶部信息 -->
+  <view class="admin-header">
+    <view class="admin-info">
+      <text class="admin-title">管理员工作台</text>
+      <text class="admin-subtitle">社区环境问题管理</text>
+    </view>
+    <view class="admin-avatar">
+      <image src="{{userInfo.avatar || '/images/default-avatar.png'}}" mode="aspectFill"></image>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="admin-menu">
+    <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
+      <view class="menu-icon">
+        <text class="icon">🏘️</text>
+      </view>
+      <view class="menu-content">
+        <text class="menu-title">选择社区</text>
+        <text class="menu-desc">选择要管理的社区</text>
+      </view>
+      <view class="menu-arrow">
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-upload/problem-upload">
+      <view class="menu-icon">
+        <text class="icon">📷</text>
+      </view>
+      <view class="menu-content">
+        <text class="menu-title">上传问题</text>
+        <text class="menu-desc">拍照上传环境问题</text>
+      </view>
+      <view class="menu-arrow">
+        <text class="arrow">></text>
+      </view>
+    </view>
+
+    <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-monitor/problem-monitor">
+      <view class="menu-icon">
+        <text class="icon">📊</text>
+      </view>
+      <view class="menu-content">
+        <text class="menu-title">问题监控</text>
+        <text class="menu-desc">监控各社区问题整改情况</text>
+      </view>
+      <view class="menu-arrow">
+        <text class="arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 当前选择的社区 -->
+  <view class="current-community" wx:if="{{selectedCommunity}}">
+    <view class="community-header">
+      <text class="community-title">当前社区</text>
+      <text class="change-btn" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">切换</text>
+    </view>
+    <view class="community-info">
+      <text class="community-name">{{selectedCommunity.name}}</text>
+      <text class="community-address">{{selectedCommunity.address}}</text>
+    </view>
+  </view>
+
+  <!-- 快速统计 -->
+  <view class="quick-stats">
+    <view class="stats-title">
+      <text class="title">今日统计</text>
+    </view>
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-number">{{todayStats.newProblems}}</text>
+        <text class="stats-label">新增问题</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">{{todayStats.fixedProblems}}</text>
+        <text class="stats-label">已整改</text>
+      </view>
+      <view class="stats-item">
+        <text class="stats-number">{{todayStats.pendingProblems}}</text>
+        <text class="stats-label">待处理</text>
+      </view>
+    </view>
+  </view>
+</view>

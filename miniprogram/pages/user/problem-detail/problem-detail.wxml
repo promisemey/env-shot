@@ -1,0 +1,111 @@
+<!--pages/user/problem-detail/problem-detail.wxml-->
+<view class="problem-detail-container">
+  <!-- 问题基本信息 -->
+  <view class="problem-info">
+    <view class="problem-header">
+      <text class="problem-title">{{problemInfo.title}}</text>
+      <view class="problem-status {{problemInfo.status}}">
+        <text class="status-text">{{problemInfo.statusText}}</text>
+      </view>
+    </view>
+    
+    <text class="problem-desc">{{problemInfo.description}}</text>
+    
+    <view class="problem-meta">
+      <view class="meta-row">
+        <view class="meta-item">
+          <text class="meta-label">社区:</text>
+          <text class="meta-value">{{problemInfo.communityName}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">分类:</text>
+          <text class="meta-value">{{problemInfo.categoryText}}</text>
+        </view>
+      </view>
+      
+      <view class="meta-row">
+        <view class="meta-item">
+          <text class="meta-label">严重程度:</text>
+          <text class="meta-value severity-{{problemInfo.severity}}">{{problemInfo.severityText}}</text>
+        </view>
+        <view class="meta-item">
+          <text class="meta-label">上报时间:</text>
+          <text class="meta-value">{{problemInfo.createTime}}</text>
+        </view>
+      </view>
+      
+      <view class="meta-row" wx:if="{{problemInfo.fixTime}}">
+        <view class="meta-item">
+          <text class="meta-label">整改时间:</text>
+          <text class="meta-value">{{problemInfo.fixTime}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 问题照片 -->
+  <view class="photos-section">
+    <view class="section-title">
+      <text class="title">问题照片</text>
+      <text class="count">{{problemInfo.photos.length}}张</text>
+    </view>
+    
+    <view class="photos-grid">
+      <image 
+        wx:for="{{problemInfo.photos}}" 
+        wx:key="*this" 
+        src="{{item}}" 
+        mode="aspectFill"
+        bindtap="previewPhoto" 
+        data-photos="{{problemInfo.photos}}" 
+        data-current="{{item}}"
+      ></image>
+    </view>
+  </view>
+
+  <!-- 整改照片 -->
+  <view class="fix-photos-section" wx:if="{{problemInfo.fixPhotos && problemInfo.fixPhotos.length > 0}}">
+    <view class="section-title">
+      <text class="title">整改照片</text>
+      <text class="count">{{problemInfo.fixPhotos.length}}张</text>
+    </view>
+    
+    <view class="photos-grid">
+      <image 
+        wx:for="{{problemInfo.fixPhotos}}" 
+        wx:key="*this" 
+        src="{{item}}" 
+        mode="aspectFill"
+        bindtap="previewFixPhoto" 
+        data-photos="{{problemInfo.fixPhotos}}" 
+        data-current="{{item}}"
+      ></image>
+    </view>
+  </view>
+
+  <!-- 整改描述 -->
+  <view class="fix-description-section" wx:if="{{problemInfo.fixDescription}}">
+    <view class="section-title">
+      <text class="title">整改描述</text>
+    </view>
+    
+    <text class="fix-description">{{problemInfo.fixDescription}}</text>
+  </view>
+
+  <!-- 位置信息 -->
+  <view class="location-section" wx:if="{{problemInfo.location}}">
+    <view class="section-title">
+      <text class="title">位置信息</text>
+    </view>
+    
+    <view class="location-info">
+      <text class="location-address">{{problemInfo.location.address}}</text>
+      <text class="location-coords">经度: {{problemInfo.location.longitude}}, 纬度: {{problemInfo.location.latitude}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section" wx:if="{{userInfo.role === 'user' && (problemInfo.status === 'pending' || problemInfo.status === 'processing')}}">
+    <button class="action-btn" bindtap="uploadFix">上传整改照片</button>
+  </view>
+</view>

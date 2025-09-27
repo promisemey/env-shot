@@ -1,0 +1,60 @@
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <view class="login-header">
+    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <text class="title">社区环境管理</text>
+    <text class="subtitle">共建美好家园</text>
+  </view>
+
+  <view class="login-form">
+    <view class="form-item">
+      <view class="input-wrapper">
+        <text class="label">手机号</text>
+        <input 
+          class="input" 
+          type="number" 
+          placeholder="请输入手机号" 
+          value="{{phone}}" 
+          bindinput="onPhoneInput"
+          maxlength="11"
+        />
+      </view>
+    </view>
+
+    <view class="form-item">
+      <view class="input-wrapper">
+        <text class="label">验证码</text>
+        <input 
+          class="input code-input" 
+          type="number" 
+          placeholder="请输入验证码" 
+          value="{{code}}" 
+          bindinput="onCodeInput"
+          maxlength="6"
+        />
+        <button 
+          class="code-btn {{codeBtnDisabled ? 'disabled' : ''}}" 
+          bindtap="sendCode"
+          disabled="{{codeBtnDisabled}}"
+        >
+          {{codeBtnText}}
+        </button>
+      </view>
+    </view>
+
+    <button 
+      class="login-btn {{loginBtnDisabled ? 'disabled' : ''}}" 
+      bindtap="login"
+      disabled="{{loginBtnDisabled}}"
+    >
+      {{loginBtnText}}
+    </button>
+  </view>
+
+  <view class="login-footer">
+    <text class="tips">登录即表示同意</text>
+    <text class="link" bindtap="showPrivacy">《隐私政策》</text>
+    <text class="tips">和</text>
+    <text class="link" bindtap="showTerms">《服务条款》</text>
+  </view>
+</view>

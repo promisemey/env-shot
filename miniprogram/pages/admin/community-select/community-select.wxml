@@ -1,0 +1,54 @@
+<!--pages/admin/community-select/community-select.wxml-->
+<view class="community-select-container">
+  <!-- 搜索栏 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <input 
+        class="search-input" 
+        placeholder="搜索社区名称或地址" 
+        value="{{searchKeyword}}" 
+        bindinput="onSearchInput"
+      />
+      <view class="search-btn" bindtap="searchCommunities">
+        <text class="search-icon">🔍</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 社区列表 -->
+  <view class="community-list">
+    <view class="list-header">
+      <text class="list-title">社区列表</text>
+      <text class="list-count">共{{communities.length}}个社区</text>
+    </view>
+
+    <view class="community-item" wx:for="{{communities}}" wx:key="id" bindtap="selectCommunity" data-community="{{item}}">
+      <view class="community-info">
+        <text class="community-name">{{item.name}}</text>
+        <text class="community-address">{{item.address}}</text>
+        <text class="community-desc" wx:if="{{item.description}}">{{item.description}}</text>
+      </view>
+      
+      <view class="community-actions">
+        <view class="action-btn" bindtap="viewCommunityDetail" data-id="{{item.id}}" catchtap="true">
+          <text class="action-text">详情</text>
+        </view>
+        <view class="select-btn {{selectedCommunityId === item.id ? 'selected' : ''}}">
+          <text class="select-text">{{selectedCommunityId === item.id ? '已选择' : '选择'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{communities.length === 0}}">
+      <text class="empty-icon">🏘️</text>
+      <text class="empty-text">暂无社区数据</text>
+      <text class="empty-desc">请联系系统管理员添加社区信息</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions" wx:if="{{selectedCommunityId}}">
+    <button class="confirm-btn" bindtap="confirmSelection">确认选择</button>
+  </view>
+</view>

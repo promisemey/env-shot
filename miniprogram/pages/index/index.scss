@@ -1,0 +1,272 @@
+/* pages/index/index.scss */
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+/* 欢迎区域 */
+.welcome-section {
+  position: relative;
+  height: 300rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+  .welcome-content {
+    text-align: center;
+    z-index: 2;
+    
+    .welcome-text {
+      display: block;
+      font-size: 28rpx;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 10rpx;
+    }
+    
+    .app-name {
+      display: block;
+      font-size: 48rpx;
+      font-weight: bold;
+      color: #ffffff;
+      margin-bottom: 20rpx;
+    }
+    
+    .user-info {
+      display: block;
+      font-size: 24rpx;
+      color: rgba(255, 255, 255, 0.7);
+    }
+  }
+  
+  .welcome-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    z-index: 1;
+  }
+}
+
+/* 功能菜单 */
+.menu-section {
+  padding: 40rpx 30rpx;
+  
+  .section-title {
+    margin-bottom: 30rpx;
+    
+    .title {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+  
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30rpx;
+    
+    .menu-item {
+      background: #ffffff;
+      border-radius: 16rpx;
+      padding: 40rpx 20rpx;
+      text-align: center;
+      box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      
+      &:active {
+        transform: scale(0.95);
+      }
+      
+      .menu-icon {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        margin: 0 auto 20rpx;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &.admin-icon {
+          background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+        
+        &.user-icon {
+          background: linear-gradient(135deg, #4ecdc4, #44a08d);
+        }
+        
+        .icon {
+          font-size: 40rpx;
+        }
+      }
+      
+      .menu-text {
+        font-size: 24rpx;
+        color: #333;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+/* 统计信息 */
+.stats-section {
+  padding: 0 30rpx 40rpx;
+  
+  .section-title {
+    margin-bottom: 30rpx;
+    
+    .title {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+    }
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20rpx;
+    
+    .stats-item {
+      background: #ffffff;
+      border-radius: 12rpx;
+      padding: 30rpx 20rpx;
+      text-align: center;
+      box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+      
+      .stats-number {
+        display: block;
+        font-size: 36rpx;
+        font-weight: bold;
+        color: #1296db;
+        margin-bottom: 10rpx;
+      }
+      
+      .stats-label {
+        font-size: 22rpx;
+        color: #666;
+      }
+    }
+  }
+}
+
+/* 最近问题 */
+.recent-section {
+  padding: 0 30rpx 40rpx;
+  
+  .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30rpx;
+    
+    .title {
+      font-size: 32rpx;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .more {
+      font-size: 24rpx;
+      color: #1296db;
+    }
+  }
+  
+  .problem-list {
+    .problem-item {
+      background: #ffffff;
+      border-radius: 12rpx;
+      padding: 30rpx;
+      margin-bottom: 20rpx;
+      display: flex;
+      box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+      
+      .problem-content {
+        flex: 1;
+        margin-right: 20rpx;
+        
+        .problem-title {
+          display: block;
+          font-size: 28rpx;
+          font-weight: bold;
+          color: #333;
+          margin-bottom: 10rpx;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        .problem-desc {
+          display: block;
+          font-size: 24rpx;
+          color: #666;
+          margin-bottom: 20rpx;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        
+        .problem-meta {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          .problem-time {
+            font-size: 22rpx;
+            color: #999;
+          }
+          
+          .problem-status {
+            font-size: 22rpx;
+            padding: 4rpx 12rpx;
+            border-radius: 20rpx;
+            color: #ffffff;
+            
+            &.pending {
+              background: #faad14;
+            }
+            
+            &.processing {
+              background: #1890ff;
+            }
+            
+            &.fixed {
+              background: #52c41a;
+            }
+            
+            &.closed {
+              background: #666666;
+            }
+          }
+        }
+      }
+      
+      .problem-photo {
+        width: 120rpx;
+        height: 120rpx;
+        border-radius: 8rpx;
+        overflow: hidden;
+        
+        image {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 80rpx 0;
+      
+      .empty-text {
+        font-size: 28rpx;
+        color: #999;
+      }
+    }
+  }
+}

@@ -1,0 +1,122 @@
+/* pages/login/login.scss */
+.login-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40rpx;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 80rpx;
+  
+  .logo {
+    width: 120rpx;
+    height: 120rpx;
+    margin-bottom: 30rpx;
+  }
+  
+  .title {
+    display: block;
+    font-size: 48rpx;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 20rpx;
+  }
+  
+  .subtitle {
+    display: block;
+    font-size: 28rpx;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+.login-form {
+  width: 100%;
+  max-width: 600rpx;
+  
+  .form-item {
+    margin-bottom: 40rpx;
+    
+    .input-wrapper {
+      position: relative;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 12rpx;
+      padding: 30rpx;
+      display: flex;
+      align-items: center;
+      
+      .label {
+        font-size: 28rpx;
+        color: #333;
+        margin-right: 20rpx;
+        min-width: 120rpx;
+      }
+      
+      .input {
+        flex: 1;
+        font-size: 28rpx;
+        color: #333;
+        border: none;
+        outline: none;
+        background: transparent;
+      }
+      
+      .code-input {
+        margin-right: 20rpx;
+      }
+      
+      .code-btn {
+        background: #1296db;
+        color: #ffffff;
+        border: none;
+        border-radius: 8rpx;
+        padding: 16rpx 24rpx;
+        font-size: 24rpx;
+        min-width: 120rpx;
+        
+        &.disabled {
+          background: #ccc;
+          color: #999;
+        }
+      }
+    }
+  }
+  
+  .login-btn {
+    width: 100%;
+    background: #1296db;
+    color: #ffffff;
+    border: none;
+    border-radius: 12rpx;
+    padding: 30rpx;
+    font-size: 32rpx;
+    font-weight: bold;
+    margin-top: 40rpx;
+    
+    &.disabled {
+      background: #ccc;
+      color: #999;
+    }
+  }
+}
+
+.login-footer {
+  position: absolute;
+  bottom: 60rpx;
+  text-align: center;
+  
+  .tips {
+    font-size: 24rpx;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .link {
+    font-size: 24rpx;
+    color: #ffffff;
+    text-decoration: underline;
+  }
+}

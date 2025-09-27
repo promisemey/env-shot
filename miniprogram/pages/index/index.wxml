@@ -1,0 +1,119 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 顶部欢迎区域 -->
+  <view class="welcome-section">
+    <view class="welcome-content">
+      <text class="welcome-text">欢迎使用</text>
+      <text class="app-name">社区环境管理</text>
+      <text class="user-info">{{userInfo.name || '用户'}}，{{userInfo.role === 'admin' ? '管理员' : '社区用户'}}</text>
+    </view>
+    <image class="welcome-bg" src="/images/welcome-bg.png" mode="aspectFill"></image>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="section-title">
+      <text class="title">功能菜单</text>
+    </view>
+    
+    <view class="menu-grid">
+      <!-- 管理员功能 -->
+      <block wx:if="{{userInfo.role === 'admin'}}">
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
+          <view class="menu-icon admin-icon">
+            <text class="icon">🏘️</text>
+          </view>
+          <text class="menu-text">选择社区</text>
+        </view>
+        
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-upload/problem-upload">
+          <view class="menu-icon admin-icon">
+            <text class="icon">📷</text>
+          </view>
+          <text class="menu-text">上传问题</text>
+        </view>
+        
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-monitor/problem-monitor">
+          <view class="menu-icon admin-icon">
+            <text class="icon">📊</text>
+          </view>
+          <text class="menu-text">问题监控</text>
+        </view>
+      </block>
+
+      <!-- 普通用户功能 -->
+      <block wx:else>
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
+          <view class="menu-icon user-icon">
+            <text class="icon">📋</text>
+          </view>
+          <text class="menu-text">问题列表</text>
+        </view>
+        
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/user/upload-fix/upload-fix">
+          <view class="menu-icon user-icon">
+            <text class="icon">✅</text>
+          </view>
+          <text class="menu-text">上传整改</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- 统计信息 -->
+  <view class="stats-section">
+    <view class="section-title">
+      <text class="title">数据统计</text>
+    </view>
+    
+    <view class="stats-grid">
+      <view class="stats-item">
+        <text class="stats-number">{{stats.totalProblems}}</text>
+        <text class="stats-label">总问题数</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{stats.pendingProblems}}</text>
+        <text class="stats-label">待处理</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{stats.fixedProblems}}</text>
+        <text class="stats-label">已整改</text>
+      </view>
+      
+      <view class="stats-item">
+        <text class="stats-number">{{stats.fixRate}}%</text>
+        <text class="stats-label">整改率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近问题 -->
+  <view class="recent-section">
+    <view class="section-title">
+      <text class="title">最近问题</text>
+      <text class="more" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">更多 ></text>
+    </view>
+    
+    <view class="problem-list">
+      <view class="problem-item" wx:for="{{recentProblems}}" wx:key="id" bindtap="viewProblemDetail" data-id="{{item.id}}">
+        <view class="problem-content">
+          <text class="problem-title">{{item.title}}</text>
+          <text class="problem-desc">{{item.description}}</text>
+          <view class="problem-meta">
+            <text class="problem-time">{{item.createTime}}</text>
+            <text class="problem-status {{item.status}}">{{item.statusText}}</text>
+          </view>
+        </view>
+        <view class="problem-photo">
+          <image src="{{item.photos[0]}}" mode="aspectFill"></image>
+        </view>
+      </view>
+      
+      <view class="empty-state" wx:if="{{recentProblems.length === 0}}">
+        <text class="empty-text">暂无问题记录</text>
+      </view>
+    </view>
+  </view>
+</view>
