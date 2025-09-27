@@ -1,38 +1,51 @@
 <!--pages/login/login.wxml-->
-<view class="login-container">
+<view class="page-container">
   <view class="login-header">
-    <t-image class="logo" src="/images/logo.png" width="120rpx" height="120rpx" shape="round" mode="aspectFit"></t-image>
+    <view class="logo-wrapper">
+      <view class="logo-bg">
+        <t-image src="/assets/images/logo.png" shape="round" error="slot" width="72" height="72">
+      <text class="error-text" slot="error">加载失败</text>
+    </t-image>
+        
+      </view>
+    </view>
     <text class="title">社区环境管理</text>
     <text class="subtitle">共建美好家园</text>
   </view>
+
   <view class="login-form">
-    <t-cell-group>
-      <t-cell>
-        <view slot="title" class="input-label">
-          <t-icon name="mobile" size="32rpx" color="#0052d9"></t-icon>
-          <text>手机号</text>
-        </view>
-        <t-input slot="right-icon" type="number" placeholder="请输入手机号" value="{{phone}}" bindchange="onPhoneInput" maxlength="11" clearable="{{true}}" />
-      </t-cell>
+    <view class="form-card">
+      <view class="form-header">
+        <t-icon name="user" size="48rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="form-title">欢迎登录</text>
+      </view>
 
-      <t-cell>
-        <view slot="title" class="input-label">
-          <t-icon name="lock-on" size="32rpx" color="#0052d9"></t-icon>
-          <text>验证码</text>
+      <view class="form-fields">
+        <view class="field-item">
+          <view class="field-label">
+            <t-icon name="mobile" size="24rpx" color="var(--td-brand-color)"></t-icon>
+            <text class="label-text">手机号</text>
+          </view>
+          <view class="field-input">
+            <t-input type="number" placeholder="请输入手机号" value="{{phone}}" bindchange="onPhoneInput" maxlength="11" clearable="{{true}}" class="input-field" />
+          </view>
         </view>
-        <view slot="right-icon" class="code-input-wrapper">
-          <t-input type="number" placeholder="请输入验证码" value="{{code}}" bindchange="onCodeInput" maxlength="6" clearable="{{true}}" />
-          <t-button theme="primary" variant="outline" size="small" bindtap="sendCode" disabled="{{codeBtnDisabled}}" class="code-btn">
-            {{codeBtnText}}
-          </t-button>
-        </view>
-      </t-cell>
-    </t-cell-group>
 
-    <t-button theme="primary" size="large" block="{{true}}" bindtap="login" disabled="{{loginBtnDisabled}}" class="login-btn">
-      <t-icon name="login" size="32rpx" slot="icon"></t-icon>
-      {{loginBtnText}}
-    </t-button>
+        <view class="field-item">
+          <view class="field-label">
+            <t-icon name="lock-on" size="24rpx" color="var(--td-brand-color)"></t-icon>
+            <text class="label-text">验证码</text>
+          </view>
+          <view class="field-input code-input">
+            <t-input type="number" placeholder="请输入验证码" value="{{code}}" bindchange="onCodeInput" maxlength="6" clearable="{{true}}" class="input-field" />
+            <view class="code-btn" bindtap="sendCode">
+              <text class="code-btn-text">{{codeBtnText}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <t-button theme="primary" size="large" bindtap="login" class="form-actions" >登录</t-button>
+    </view>
   </view>
 
   <view class="login-footer">

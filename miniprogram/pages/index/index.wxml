@@ -1,158 +1,182 @@
 <!--pages/index/index.wxml-->
-<view class="container">
+<view class="page-container">
   <!-- 顶部欢迎区域 -->
   <view class="welcome-section">
     <view class="welcome-content">
-      <t-image 
-        class="welcome-bg" 
-        src="{{userInfo.avatar || '/images/default-avatar.png'}}" 
-        width="100%" 
-        height="300rpx" 
-        mode="aspectFill"
-      ></t-image>
+      <view class="welcome-bg"></view>
       <view class="welcome-overlay">
-        <text class="welcome-text">欢迎使用</text>
+        <view class="welcome-icon">
+          <t-icon name="home" size="80rpx" color="#ffffff"></t-icon>
+        </view>
         <text class="app-name">社区环境管理</text>
-        <text class="user-info">{{userInfo.name || '用户'}}，{{userInfo.role === 'admin' ? '管理员' : '社区用户'}}</text>
+        <text class="welcome-text">欢迎使用，{{userInfo.name || '用户'}}</text>
+        <text class="user-role"> {{userInfo.role === 'admin' ? '管理员' : '社区用户'}}</text>
       </view>
     </view>
   </view>
 
   <!-- 功能菜单 -->
   <view class="menu-section">
-    <view class="section-title">
-      <t-icon name="app" size="32rpx" color="#0052d9"></t-icon>
-      <text class="title">功能菜单</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="apps" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">功能菜单</text>
+      </view>
     </view>
     
-    <t-grid column="3" border="{{false}}" hover="{{true}}">
+    <view class="menu-grid">
       <!-- 管理员功能 -->
       <block wx:if="{{userInfo.role === 'admin'}}">
-        <t-grid-item bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
-          <view class="menu-item">
-            <t-icon name="home" size="48rpx" color="#0052d9"></t-icon>
-            <text class="menu-text">选择社区</text>
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
+          <view class="menu-icon">
+            <t-icon name="location" size="48rpx" color="#0052d9"></t-icon>
           </view>
-        </t-grid-item>
+          <text class="menu-text">选择社区</text>
+          <text class="menu-desc">管理社区信息</text>
+        </view>
         
-        <t-grid-item bindtap="navigateTo" data-url="/pages/admin/problem-upload/problem-upload">
-          <view class="menu-item">
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-upload/problem-upload">
+          <view class="menu-icon">
             <t-icon name="camera" size="48rpx" color="#e34d59"></t-icon>
-            <text class="menu-text">上传问题</text>
           </view>
-        </t-grid-item>
+          <text class="menu-text">上传问题</text>
+          <text class="menu-desc">拍照上传问题</text>
+        </view>
         
-        <t-grid-item bindtap="navigateTo" data-url="/pages/admin/problem-monitor/problem-monitor">
-          <view class="menu-item">
-            <t-icon name="chart" size="48rpx" color="#52c41a"></t-icon>
-            <text class="menu-text">问题监控</text>
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-monitor/problem-monitor">
+          <view class="menu-icon">
+            <t-icon name="chart-bar" size="48rpx" color="#52c41a"></t-icon>
           </view>
-        </t-grid-item>
+          <text class="menu-text">问题监控</text>
+          <text class="menu-desc">监控整改情况</text>
+        </view>
       </block>
 
       <!-- 普通用户功能 -->
       <block wx:else>
-        <t-grid-item bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
-          <view class="menu-item">
-            <t-icon name="file-list" size="48rpx" color="#0052d9"></t-icon>
-            <text class="menu-text">问题列表</text>
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
+          <view class="menu-icon">
+            <t-icon name="view-list" size="48rpx" color="#0052d9"></t-icon>
           </view>
-        </t-grid-item>
+          <text class="menu-text">问题列表</text>
+          <text class="menu-desc">查看问题记录</text>
+        </view>
         
-        <t-grid-item bindtap="navigateTo" data-url="/pages/user/upload-fix/upload-fix">
-          <view class="menu-item">
+        <view class="menu-item" bindtap="navigateTo" data-url="/pages/user/upload-fix/upload-fix">
+          <view class="menu-icon">
             <t-icon name="check-circle" size="48rpx" color="#52c41a"></t-icon>
-            <text class="menu-text">上传整改</text>
           </view>
-        </t-grid-item>
+          <text class="menu-text">上传整改</text>
+          <text class="menu-desc">上传整改照片</text>
+        </view>
       </block>
-    </t-grid>
+    </view>
   </view>
 
   <!-- 统计信息 -->
   <view class="stats-section">
-    <view class="section-title">
-      <t-icon name="chart-pie" size="32rpx" color="#0052d9"></t-icon>
-      <text class="title">数据统计</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="chart-pie" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">数据统计</text>
+      </view>
     </view>
     
-    <t-grid column="4" border="{{false}}">
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{stats.totalProblems}}</text>
-          <text class="stats-label">总问题数</text>
+    <view class="stats-grid">
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="layers" size="40rpx" color="#0052d9"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{stats.totalProblems}}</text>
+        <text class="stats-label">总问题数</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{stats.pendingProblems}}</text>
-          <text class="stats-label">待处理</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="time" size="40rpx" color="#ed7b2f"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{stats.pendingProblems}}</text>
+        <text class="stats-label">待处理</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{stats.fixedProblems}}</text>
-          <text class="stats-label">已整改</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="check-circle" size="40rpx" color="#00a870"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{stats.fixedProblems}}</text>
+        <text class="stats-label">已整改</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{stats.fixRate}}%</text>
-          <text class="stats-label">整改率</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="chart-bar" size="40rpx" color="#0052d9"></t-icon>
         </view>
-      </t-grid-item>
-    </t-grid>
+        <text class="stats-number">{{stats.fixRate}}%</text>
+        <text class="stats-label">整改率</text>
+      </view>
+    </view>
   </view>
 
   <!-- 最近问题 -->
   <view class="recent-section">
-    <view class="section-title">
-      <t-icon name="time" size="32rpx" color="#0052d9"></t-icon>
-      <text class="title">最近问题</text>
-      <t-button theme="text" size="small" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
-        更多
-        <t-icon name="chevron-right" size="24rpx"></t-icon>
-      </t-button>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="time" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">最近问题</text>
+      </view>
+      <view class="section-action" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
+        <text class="action-text">更多</text>
+        <t-icon name="chevron-right" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
+      </view>
     </view>
     
-    <t-cell-group>
-      <t-cell 
+    <view class="recent-list">
+      <view 
+        class="recent-item" 
         wx:for="{{recentProblems}}" 
         wx:key="id" 
         bindtap="viewProblemDetail" 
         data-id="{{item.id}}"
-        title="{{item.title}}"
-        description="{{item.description}}"
-        note="{{item.createTime}}"
-        left-icon="file"
-        right-icon="chevron-right"
-        hover="{{true}}"
       >
-        <view slot="right-icon">
+        <view class="item-left">
+          <view class="item-icon">
+            <t-icon name="error-circle" size="32rpx" color="#e34d59"></t-icon>
+          </view>
+          <view class="item-photo" wx:if="{{item.photos && item.photos[0]}}">
+            <t-image 
+              src="{{item.photos[0]}}" 
+              width="80rpx" 
+              height="80rpx" 
+              shape="round"
+              mode="aspectFill"
+            ></t-image>
+          </view>
+        </view>
+        
+        <view class="item-content">
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-desc">{{item.description}}</text>
+          <text class="item-time">{{item.createTime}}</text>
+        </view>
+        
+        <view class="item-right">
           <t-tag 
             theme="{{item.status === 'pending' ? 'warning' : item.status === 'fixed' ? 'success' : 'default'}}"
             size="small"
           >
             {{item.statusText}}
           </t-tag>
+          <t-icon name="chevron-right" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
         </view>
-        <view slot="description">
-          <t-image 
-            src="{{item.photos[0]}}" 
-            width="80rpx" 
-            height="80rpx" 
-            shape="round"
-            mode="aspectFill"
-          ></t-image>
-        </view>
-      </t-cell>
+      </view>
       
-      <t-cell wx:if="{{recentProblems.length === 0}}" title="暂无问题记录" description="点击上方功能菜单开始使用">
-        <t-icon name="info-circle" slot="left-icon" color="#999"></t-icon>
-      </t-cell>
-    </t-cell-group>
+      <view class="empty-state" wx:if="{{recentProblems.length === 0}}">
+        <view class="empty-icon">
+          <t-icon name="info-circle" size="80rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+        <text class="empty-text">暂无问题记录</text>
+        <text class="empty-desc">点击上方功能菜单开始使用</text>
+      </view>
+    </view>
   </view>
 </view>

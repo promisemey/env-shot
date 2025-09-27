@@ -1,6 +1,5 @@
 {
   "navigationBarTitleText": "登录",
-  "navigationStyle": "custom",
   "usingComponents": {
     "t-cell": "tdesign-miniprogram/cell/cell",
     "t-cell-group": "tdesign-miniprogram/cell-group/cell-group",

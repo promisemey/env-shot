@@ -1,7 +1,14 @@
 <!--pages/user/problem-list/problem-list.wxml-->
-<view class="problem-list-container">
+<view class="page-container">
   <!-- 筛选栏 -->
   <view class="filter-section">
+    <view class="filter-header">
+      <view class="filter-title">
+        <t-icon name="filter" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">问题筛选</text>
+      </view>
+    </view>
+    
     <view class="filter-tabs">
       <view 
         class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}" 
@@ -9,6 +16,7 @@
         data-filter="all"
       >
         <text class="tab-text">全部</text>
+        <view class="tab-indicator" wx:if="{{currentFilter === 'all'}}"></view>
       </view>
       <view 
         class="filter-tab {{currentFilter === 'pending' ? 'active' : ''}}" 
@@ -16,6 +24,7 @@
         data-filter="pending"
       >
         <text class="tab-text">待处理</text>
+        <view class="tab-indicator" wx:if="{{currentFilter === 'pending'}}"></view>
       </view>
       <view 
         class="filter-tab {{currentFilter === 'processing' ? 'active' : ''}}" 
@@ -23,6 +32,7 @@
         data-filter="processing"
       >
         <text class="tab-text">处理中</text>
+        <view class="tab-indicator" wx:if="{{currentFilter === 'processing'}}"></view>
       </view>
       <view 
         class="filter-tab {{currentFilter === 'fixed' ? 'active' : ''}}" 
@@ -30,6 +40,7 @@
         data-filter="fixed"
       >
         <text class="tab-text">已整改</text>
+        <view class="tab-indicator" wx:if="{{currentFilter === 'fixed'}}"></view>
       </view>
     </view>
   </view>
@@ -38,43 +49,74 @@
   <view class="problem-list">
     <view class="problem-item" wx:for="{{problems}}" wx:key="id" bindtap="viewProblemDetail" data-id="{{item.id}}">
       <view class="problem-header">
-        <text class="problem-title">{{item.title}}</text>
-        <view class="problem-status {{item.status}}">
-          <text class="status-text">{{item.statusText}}</text>
+        <view class="problem-icon">
+          <t-icon name="error-circle" size="32rpx" color="#e34d59"></t-icon>
+        </view>
+        <view class="problem-title-wrapper">
+          <text class="problem-title">{{item.title}}</text>
+          <view class="problem-status-badge {{item.status}}">
+            <t-icon name="{{item.status === 'pending' ? 'time' : item.status === 'processing' ? 'loading' : item.status === 'fixed' ? 'check-circle' : 'close-circle'}}" size="20rpx" color="#ffffff"></t-icon>
+            <text class="status-text">{{item.statusText}}</text>
+          </view>
         </view>
       </view>
       
       <text class="problem-desc">{{item.description}}</text>
       
       <view class="problem-meta">
-        <view class="meta-item">
-          <text class="meta-label">分类:</text>
-          <text class="meta-value">{{item.categoryText}}</text>
-        </view>
-        <view class="meta-item">
-          <text class="meta-label">严重程度:</text>
-          <text class="meta-value severity-{{item.severity}}">{{item.severityText}}</text>
+        <view class="meta-row">
+          <view class="meta-item">
+            <t-icon name="folder" size="20rpx" color="var(--td-gray-color-4)"></t-icon>
+            <text class="meta-label">分类:</text>
+            <text class="meta-value">{{item.categoryText}}</text>
+          </view>
+          <view class="meta-item">
+            <t-icon name="error" size="20rpx" color="var(--td-gray-color-4)"></t-icon>
+            <text class="meta-label">严重程度:</text>
+            <text class="meta-value severity-{{item.severity}}">{{item.severityText}}</text>
+          </view>
         </view>
       </view>
       
-      <view class="problem-photos">
-        <image 
-          wx:for="{{item.photos}}" 
-          wx:for-item="photo" 
-          wx:key="*this" 
-          src="{{photo}}" 
-          mode="aspectFill"
-          bindtap="previewPhoto" 
-          data-photos="{{item.photos}}" 
-          data-current="{{photo}}"
-        ></image>
+      <view class="problem-photos" wx:if="{{item.photos && item.photos.length > 0}}">
+        <view class="photos-grid">
+          <view 
+            class="photo-item" 
+            wx:for="{{item.photos}}" 
+            wx:for-item="photo" 
+            wx:key="*this" 
+            wx:if="{{index < 3}}"
+            bindtap="previewPhoto" 
+            data-photos="{{item.photos}}" 
+            data-current="{{photo}}"
+            catchtap="true"
+          >
+            <image src="{{photo}}" mode="aspectFill"></image>
+            <view class="photo-overlay" wx:if="{{index === 2 && item.photos.length > 3}}">
+              <text class="more-count">+{{item.photos.length - 3}}</text>
+            </view>
+          </view>
+        </view>
       </view>
       
       <view class="problem-footer">
-        <text class="problem-time">{{item.createTime}}</text>
-        <view class="problem-actions">
-          <view class="action-btn" wx:if="{{item.status === 'pending' || item.status === 'processing'}}" bindtap="uploadFix" data-id="{{item.id}}" catchtap="true">
+        <view class="footer-left">
+          <t-icon name="time" size="20rpx" color="var(--td-gray-color-4)"></t-icon>
+          <text class="problem-time">{{item.createTime}}</text>
+        </view>
+        <view class="footer-right">
+          <view 
+            class="action-btn" 
+            wx:if="{{item.status === 'pending' || item.status === 'processing'}}" 
+            bindtap="uploadFix" 
+            data-id="{{item.id}}" 
+            catchtap="true"
+          >
+            <t-icon name="check-circle" size="20rpx" color="var(--td-success-color)"></t-icon>
             <text class="action-text">上传整改</text>
+          </view>
+          <view class="detail-arrow">
+            <t-icon name="chevron-right" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
           </view>
         </view>
       </view>
@@ -82,19 +124,25 @@
 
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{problems.length === 0 && !loading}}">
-      <text class="empty-icon">📋</text>
+      <view class="empty-icon">
+        <t-icon name="info-circle" size="120rpx" color="var(--td-gray-color-4)"></t-icon>
+      </view>
       <text class="empty-text">暂无问题记录</text>
       <text class="empty-desc">当前筛选条件下没有找到问题</text>
     </view>
 
     <!-- 加载状态 -->
     <view class="loading-state" wx:if="{{loading}}">
+      <t-icon name="loading" size="60rpx" color="var(--td-brand-color)"></t-icon>
       <text class="loading-text">加载中...</text>
     </view>
   </view>
 
   <!-- 加载更多 -->
   <view class="load-more" wx:if="{{hasMore && !loading}}">
-    <button class="load-more-btn" bindtap="loadMore">加载更多</button>
+    <view class="load-more-btn" bindtap="loadMore">
+      <t-icon name="chevron-down" size="24rpx" color="var(--td-brand-color)"></t-icon>
+      <text class="load-more-text">加载更多</text>
+    </view>
   </view>
 </view>

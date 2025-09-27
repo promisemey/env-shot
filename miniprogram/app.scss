@@ -11,8 +11,9 @@
 
 /* TDesign 全局样式覆盖 */
 page {
-  background-color: #f3f3f3;
+  background-color: #f5f7fa;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
 }
 
 /* TDesign 主题色 */
@@ -28,4 +29,33 @@ page {
   --td-brand-color-8: #003cab;
   --td-brand-color-9: #002a7c;
   --td-brand-color-10: #001a57;
+  
+  /* 扩展颜色 */
+  --td-success-color: #00a870;
+  --td-warning-color: #ed7b2f;
+  --td-error-color: #d54941;
+  --td-gray-color-1: #f3f3f3;
+  --td-gray-color-2: #eee;
+  --td-gray-color-3: #ddd;
+  --td-gray-color-4: #999;
+  --td-gray-color-5: #666;
+  --td-gray-color-6: #333;
+  
+  /* 阴影变量 */
+  --td-shadow-1: 0 1rpx 10rpx rgba(0, 0, 0, 0.05);
+  --td-shadow-2: 0 2rpx 20rpx rgba(0, 0, 0, 0.1);
+  --td-shadow-3: 0 6rpx 30rpx rgba(0, 0, 0, 0.15);
+  
+  /* 圆角变量 */
+  --td-radius-small: 8rpx;
+  --td-radius-medium: 12rpx;
+  --td-radius-large: 16rpx;
+  --td-radius-extra-large: 24rpx;
+}
+
+/* 全局容器样式 */
+.page-container {
+  min-height: 100vh;
+  background: var(--td-gray-color-1);
+  padding-bottom: env(safe-area-inset-bottom);
 }

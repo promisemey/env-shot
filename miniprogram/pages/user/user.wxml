@@ -1,122 +1,160 @@
 <!--pages/user/user.wxml-->
-<view class="user-container">
+<view class="page-container">
   <!-- 用户信息头部 -->
   <view class="user-header">
-    <view class="user-info">
-      <t-avatar 
-        size="120rpx" 
-        image="{{userInfo.avatar || '/images/default-avatar.png'}}"
-        class="user-avatar"
-      ></t-avatar>
-      <view class="user-details">
-        <text class="user-name">{{userInfo.name || '用户'}}</text>
-        <text class="user-phone">{{userInfo.phone}}</text>
-        <text class="user-role">社区用户</text>
+    <view class="header-content">
+      <view class="user-info">
+        <view class="user-avatar-wrapper">
+          <t-avatar 
+            size="120rpx" 
+            image="{{userInfo.avatar || '/images/default-avatar.png'}}"
+            class="user-avatar"
+          ></t-avatar>
+          <view class="avatar-badge">
+            <t-icon name="user" size="24rpx" color="#ffffff"></t-icon>
+          </view>
+        </view>
+        <view class="user-details">
+          <text class="user-name">{{userInfo.name || '用户'}}</text>
+          <text class="user-phone">{{userInfo.phone}}</text>
+          <view class="user-role-badge">
+            <t-icon name="medal" size="20rpx" color="#ffffff"></t-icon>
+            <text class="user-role">社区用户</text>
+          </view>
+        </view>
       </view>
-    </view>
-    <view class="user-actions">
-      <t-button theme="text" size="small" bindtap="editProfile">
-        <t-icon name="edit" size="24rpx" slot="icon"></t-icon>
-        编辑
-      </t-button>
+      <view class="user-actions">
+        <view class="action-btn" bindtap="editProfile">
+          <t-icon name="edit" size="28rpx" color="#ffffff"></t-icon>
+        </view>
+      </view>
     </view>
   </view>
 
   <!-- 社区信息 -->
   <view class="community-info" wx:if="{{userCommunity}}">
-    <view class="community-header">
-      <t-icon name="location" size="32rpx" color="#0052d9"></t-icon>
-      <text class="community-title">所属社区</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="location" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">所属社区</text>
+      </view>
     </view>
-    <text class="community-name">{{userCommunity.name}}</text>
-    <text class="community-address">{{userCommunity.address}}</text>
+    
+    <view class="community-card">
+      <view class="community-icon">
+        <t-icon name="home" size="48rpx" color="var(--td-brand-color)"></t-icon>
+      </view>
+      <view class="community-details">
+        <text class="community-name">{{userCommunity.name}}</text>
+        <text class="community-address">{{userCommunity.address}}</text>
+      </view>
+    </view>
   </view>
 
   <!-- 功能菜单 -->
   <view class="user-menu">
-    <t-cell-group>
-      <t-cell 
-        bindtap="navigateTo" 
-        data-url="/pages/user/problem-list/problem-list"
-        title="问题列表"
-        description="查看社区环境问题"
-        left-icon="file-list"
-        right-icon="chevron-right"
-        hover="{{true}}"
-      >
-        <t-icon name="file-list" slot="left-icon" size="48rpx" color="#0052d9"></t-icon>
-      </t-cell>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="apps" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">功能菜单</text>
+      </view>
+    </view>
+    
+    <view class="menu-grid">
+      <view class="menu-card" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
+        <view class="card-icon">
+          <t-icon name="view-list" size="56rpx" color="#0052d9"></t-icon>
+        </view>
+        <view class="card-content">
+          <text class="card-title">问题列表</text>
+          <text class="card-desc">查看社区环境问题</text>
+        </view>
+        <view class="card-arrow">
+          <t-icon name="chevron-right" size="32rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+      </view>
 
-      <t-cell 
-        bindtap="navigateTo" 
-        data-url="/pages/user/upload-fix/upload-fix"
-        title="上传整改"
-        description="上传问题整改照片"
-        left-icon="check-circle"
-        right-icon="chevron-right"
-        hover="{{true}}"
-      >
-        <t-icon name="check-circle" slot="left-icon" size="48rpx" color="#52c41a"></t-icon>
-      </t-cell>
-    </t-cell-group>
+      <view class="menu-card" bindtap="navigateTo" data-url="/pages/user/upload-fix/upload-fix">
+        <view class="card-icon">
+          <t-icon name="check-circle" size="56rpx" color="#52c41a"></t-icon>
+        </view>
+        <view class="card-content">
+          <text class="card-title">上传整改</text>
+          <text class="card-desc">上传问题整改照片</text>
+        </view>
+        <view class="card-arrow">
+          <t-icon name="chevron-right" size="32rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 统计信息 -->
   <view class="user-stats">
-    <view class="stats-title">
-      <t-icon name="chart-pie" size="32rpx" color="#0052d9"></t-icon>
-      <text class="title">我的贡献</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="chart-pie" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">我的贡献</text>
+      </view>
     </view>
     
-    <t-grid column="3" border="{{false}}">
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{userStats.reportedProblems}}</text>
-          <text class="stats-label">上报问题</text>
+    <view class="stats-grid">
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="layers" size="40rpx" color="#0052d9"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{userStats.reportedProblems}}</text>
+        <text class="stats-label">上报问题</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{userStats.fixedProblems}}</text>
-          <text class="stats-label">整改问题</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="check-circle" size="40rpx" color="#00a870"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{userStats.fixedProblems}}</text>
+        <text class="stats-label">整改问题</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{userStats.pendingProblems}}</text>
-          <text class="stats-label">待整改</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="time" size="40rpx" color="#ed7b2f"></t-icon>
         </view>
-      </t-grid-item>
-    </t-grid>
+        <text class="stats-number">{{userStats.pendingProblems}}</text>
+        <text class="stats-label">待整改</text>
+      </view>
+    </view>
   </view>
 
   <!-- 最近活动 -->
   <view class="recent-activity">
-    <view class="activity-header">
-      <view class="activity-title-wrapper">
-        <t-icon name="time" size="32rpx" color="#0052d9"></t-icon>
-        <text class="activity-title">最近活动</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="time" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">最近活动</text>
       </view>
-      <t-button theme="text" size="small" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
-        更多
-        <t-icon name="chevron-right" size="24rpx"></t-icon>
-      </t-button>
+      <view class="section-action" bindtap="navigateTo" data-url="/pages/user/problem-list/problem-list">
+        <text class="action-text">更多</text>
+        <t-icon name="chevron-right" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
+      </view>
     </view>
     
-    <t-cell-group>
-      <t-cell 
+    <view class="activity-list">
+      <view 
+        class="activity-item" 
         wx:for="{{recentActivities}}" 
         wx:key="id"
-        title="{{item.title}}"
-        description="{{item.description}}"
-        note="{{item.time}}"
-        left-icon="{{item.iconName}}"
-        hover="{{true}}"
       >
-        <t-icon name="{{item.iconName}}" slot="left-icon" size="32rpx" color="#0052d9"></t-icon>
-        <view slot="right-icon">
+        <view class="activity-icon">
+          <t-icon name="error-circle" size="32rpx" color="#e34d59"></t-icon>
+        </view>
+        
+        <view class="activity-content">
+          <text class="activity-title">{{item.title}}</text>
+          <text class="activity-desc">{{item.description}}</text>
+          <text class="activity-time">{{item.time}}</text>
+        </view>
+        
+        <view class="activity-status">
           <t-tag 
             theme="{{item.status === 'pending' ? 'warning' : item.status === 'fixed' ? 'success' : 'default'}}"
             size="small"
@@ -124,19 +162,25 @@
             {{item.statusText}}
           </t-tag>
         </view>
-      </t-cell>
+      </view>
       
-      <t-cell wx:if="{{recentActivities.length === 0}}" title="暂无活动记录" description="开始参与社区环境管理">
-        <t-icon name="info-circle" slot="left-icon" color="#999"></t-icon>
-      </t-cell>
-    </t-cell-group>
+      <view class="empty-state" wx:if="{{recentActivities.length === 0}}">
+        <view class="empty-icon">
+          <t-icon name="info-circle" size="80rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+        <text class="empty-text">暂无活动记录</text>
+        <text class="empty-desc">开始参与社区环境管理</text>
+      </view>
+    </view>
   </view>
 
   <!-- 退出登录 -->
   <view class="logout-section">
-    <t-button theme="danger" size="large" block="{{true}}" bindtap="logout">
-      <t-icon name="logout" size="32rpx" slot="icon"></t-icon>
-      退出登录
-    </t-button>
+    <view class="logout-card">
+      <view class="logout-icon">
+        <t-icon name="logout" size="32rpx" color="#d54941"></t-icon>
+      </view>
+      <text class="logout-text" bindtap="logout">退出登录</text>
+    </view>
   </view>
 </view>

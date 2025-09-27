@@ -1,20 +1,58 @@
 /* pages/login/login.scss */
-.login-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0052d9 0%, #0034b5 100%);
+.page-container {
+  height: 100vh;
+  background: linear-gradient(135deg, #0052d9 0%, #366ef4 50%, #618dff 100%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40rpx;
+  padding: 60rpx 40rpx 40rpx;
+  position: relative;
+  overflow: hidden;
+  
+  // &::before {
+  //   content: '';
+  //   position: absolute;
+  //   top: -50%;
+  //   right: -50%;
+  //   width: 200%;
+  //   height: 200%;
+  //   background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  //   -webkit-animation: rotate 30s linear infinite;
+  //           animation: rotate 30s linear infinite;
+  // }
+}
+
+@-webkit-keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .login-header {
+  margin-top: 100rpx;
   text-align: center;
   margin-bottom: 80rpx;
+  z-index: 2;
   
-  .logo {
-    margin-bottom: 30rpx;
+  .logo-wrapper {
+    margin-bottom: 40rpx;
+    
+    .logo-bg {
+      width: 120rpx;
+      height: 120rpx;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      -webkit-backdrop-filter: blur(10rpx);
+              backdrop-filter: blur(10rpx);
+      border: 4rpx solid rgba(255, 255, 255, 0.3);
+    }
   }
   
   .title {
@@ -22,7 +60,8 @@
     font-size: 48rpx;
     font-weight: bold;
     color: #ffffff;
-    margin-bottom: 20rpx;
+    margin-bottom: 16rpx;
+    letter-spacing: 2rpx;
   }
   
   .subtitle {
@@ -33,39 +72,107 @@
 }
 
 .login-form {
-  width: 100%;
-  max-width: 600rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
   
-  .input-label {
+  .form-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: var(--td-radius-extra-large);
+    padding: 48rpx 40rpx;
+    -webkit-backdrop-filter: blur(20rpx);
+            backdrop-filter: blur(20rpx);
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-header {
     display: flex;
     align-items: center;
-    font-size: 28rpx;
-    color: #000000;
+    justify-content: center;
+    margin-bottom: 40rpx;
     
-    text {
-      margin-left: 10rpx;
+    .form-title {
+      font-size: 32rpx;
+      font-weight: 600;
+      color: var(--td-gray-color-6);
+      margin-left: 16rpx;
     }
   }
   
-  .code-input-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 20rpx;
+  .form-fields {
+    margin-bottom: 48rpx;
+  }
+  
+  .field-item {
+    margin-bottom: 32rpx;
     
-    .code-btn {
-      min-width: 120rpx;
+    .field-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16rpx;
+      
+      .label-text {
+        font-size: 28rpx;
+        font-weight: 500;
+        color: var(--td-gray-color-6);
+        margin-left: 12rpx;
+      }
+    }
+    
+    .field-input {
+      &.code-input {
+        display: flex;
+        gap: 16rpx;
+        align-items: center;
+        
+        .input-field {
+          flex: 1;
+        }
+        
+        .code-btn {
+          padding: 20rpx 24rpx;
+          background: var(--td-brand-color-1);
+          border: 2rpx solid var(--td-brand-color);
+          border-radius: var(--td-radius-medium);
+          min-width: 120rpx;
+          text-align: center;
+          
+          .code-btn-text {
+            font-size: 24rpx;
+            color: var(--td-brand-color);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+    
+    .input-field {
+      width: 100%;
+      padding: 24rpx 20rpx;
+      background: #ffffff;
+      border: 2rpx solid var(--td-gray-color-2);
+      border-radius: var(--td-radius-medium);
+      font-size: 28rpx;
+      transition: all 0.3s ease;
+      
+      &:focus {
+        border-color: var(--td-brand-color);
+        box-shadow: 0 0 0 6rpx rgba(0, 82, 217, 0.1);
+      }
     }
   }
   
-  .login-btn {
-    margin-top: 40rpx;
+  .form-actions {
+   width: 100%;
   }
 }
 
 .login-footer {
-  position: absolute;
-  bottom: 60rpx;
+  margin-top: auto;
   text-align: center;
+  padding: 40rpx 0 20rpx;
+  z-index: 2;
   
   .tips {
     font-size: 24rpx;
@@ -76,5 +183,6 @@
     font-size: 24rpx;
     color: #ffffff;
     text-decoration: underline;
+    font-weight: 500;
   }
 }

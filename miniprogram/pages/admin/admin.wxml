@@ -1,108 +1,132 @@
 <!--pages/admin/admin.wxml-->
-<view class="admin-container">
+<view class="page-container">
   <!-- 顶部信息 -->
   <view class="admin-header">
-    <view class="admin-info">
-      <text class="admin-title">管理员工作台</text>
-      <text class="admin-subtitle">社区环境问题管理</text>
+    <view class="header-content">
+      <view class="admin-info">
+        <view class="admin-icon">
+          <t-icon name="user" size="60rpx" color="#ffffff"></t-icon>
+        </view>
+        <view class="admin-text">
+          <text class="admin-title">管理员工作台</text>
+          <text class="admin-subtitle">社区环境问题管理</text>
+          <text class="admin-name">{{userInfo.name || '管理员'}}</text>
+        </view>
+      </view>
+      <view class="header-decoration">
+        <t-icon name="setting" size="48rpx" color="rgba(255,255,255,0.3)"></t-icon>
+      </view>
     </view>
-    <t-image 
-      class="admin-avatar"
-      src="{{userInfo.avatar || '/images/default-avatar.png'}}" 
-      width="100rpx" 
-      height="100rpx" 
-      shape="round"
-      mode="aspectFill"
-    ></t-image>
   </view>
 
   <!-- 功能菜单 -->
   <view class="admin-menu">
-    <t-cell-group>
-      <t-cell 
-        bindtap="navigateTo" 
-        data-url="/pages/admin/community-select/community-select"
-        title="选择社区"
-        description="选择要管理的社区"
-        left-icon="home"
-        right-icon="chevron-right"
-        hover="{{true}}"
-      >
-        <t-icon name="home" slot="left-icon" size="48rpx" color="#0052d9"></t-icon>
-      </t-cell>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="apps" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">功能菜单</text>
+      </view>
+    </view>
+    
+    <view class="menu-grid">
+      <view class="menu-card" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
+        <view class="card-icon">
+          <t-icon name="location" size="56rpx" color="#0052d9"></t-icon>
+        </view>
+        <view class="card-content">
+          <text class="card-title">选择社区</text>
+          <text class="card-desc">选择要管理的社区</text>
+        </view>
+        <view class="card-arrow">
+          <t-icon name="chevron-right" size="32rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+      </view>
 
-      <t-cell 
-        bindtap="navigateTo" 
-        data-url="/pages/admin/problem-upload/problem-upload"
-        title="上传问题"
-        description="拍照上传环境问题"
-        left-icon="camera"
-        right-icon="chevron-right"
-        hover="{{true}}"
-      >
-        <t-icon name="camera" slot="left-icon" size="48rpx" color="#e34d59"></t-icon>
-      </t-cell>
+      <view class="menu-card" bindtap="navigateTo" data-url="/pages/admin/problem-upload/problem-upload">
+        <view class="card-icon">
+          <t-icon name="camera" size="56rpx" color="#e34d59"></t-icon>
+        </view>
+        <view class="card-content">
+          <text class="card-title">上传问题</text>
+          <text class="card-desc">拍照上传环境问题</text>
+        </view>
+        <view class="card-arrow">
+          <t-icon name="chevron-right" size="32rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+      </view>
 
-      <t-cell 
-        bindtap="navigateTo" 
-        data-url="/pages/admin/problem-monitor/problem-monitor"
-        title="问题监控"
-        description="监控各社区问题整改情况"
-        left-icon="chart"
-        right-icon="chevron-right"
-        hover="{{true}}"
-      >
-        <t-icon name="chart" slot="left-icon" size="48rpx" color="#52c41a"></t-icon>
-      </t-cell>
-    </t-cell-group>
+      <view class="menu-card" bindtap="navigateTo" data-url="/pages/admin/problem-monitor/problem-monitor">
+        <view class="card-icon">
+          <t-icon name="chart-bar" size="56rpx" color="#52c41a"></t-icon>
+        </view>
+        <view class="card-content">
+          <text class="card-title">问题监控</text>
+          <text class="card-desc">监控各社区问题整改情况</text>
+        </view>
+        <view class="card-arrow">
+          <t-icon name="chevron-right" size="32rpx" color="var(--td-gray-color-4)"></t-icon>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 当前选择的社区 -->
   <view class="current-community" wx:if="{{selectedCommunity}}">
-    <view class="community-header">
-      <view class="community-title-wrapper">
-        <t-icon name="location" size="32rpx" color="#0052d9"></t-icon>
-        <text class="community-title">当前社区</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="location" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">当前社区</text>
       </view>
-      <t-button theme="text" size="small" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
-        切换
-        <t-icon name="swap" size="24rpx"></t-icon>
-      </t-button>
+      <view class="section-action" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
+        <text class="action-text">切换</text>
+        <t-icon name="swap" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
+      </view>
     </view>
-    <view class="community-info">
-      <text class="community-name">{{selectedCommunity.name}}</text>
-      <text class="community-address">{{selectedCommunity.address}}</text>
+    
+    <view class="community-card">
+      <view class="community-icon">
+        <t-icon name="home" size="48rpx" color="var(--td-brand-color)"></t-icon>
+      </view>
+      <view class="community-info">
+        <text class="community-name">{{selectedCommunity.name}}</text>
+        <text class="community-address">{{selectedCommunity.address}}</text>
+      </view>
     </view>
   </view>
 
   <!-- 快速统计 -->
   <view class="quick-stats">
-    <view class="stats-title">
-      <t-icon name="chart-pie" size="32rpx" color="#0052d9"></t-icon>
-      <text class="title">今日统计</text>
+    <view class="section-header">
+      <view class="section-title">
+        <t-icon name="chart-pie" size="28rpx" color="var(--td-brand-color)"></t-icon>
+        <text class="title">今日统计</text>
+      </view>
     </view>
     
-    <t-grid column="3" border="{{false}}">
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{todayStats.newProblems}}</text>
-          <text class="stats-label">新增问题</text>
+    <view class="stats-grid">
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="add-circle" size="40rpx" color="#0052d9"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{todayStats.newProblems}}</text>
+        <text class="stats-label">新增问题</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{todayStats.fixedProblems}}</text>
-          <text class="stats-label">已整改</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="check-circle" size="40rpx" color="#00a870"></t-icon>
         </view>
-      </t-grid-item>
+        <text class="stats-number">{{todayStats.fixedProblems}}</text>
+        <text class="stats-label">已整改</text>
+      </view>
       
-      <t-grid-item>
-        <view class="stats-item">
-          <text class="stats-number">{{todayStats.pendingProblems}}</text>
-          <text class="stats-label">待处理</text>
+      <view class="stats-card">
+        <view class="stats-icon">
+          <t-icon name="time" size="40rpx" color="#ed7b2f"></t-icon>
         </view>
-      </t-grid-item>
-    </t-grid>
+        <text class="stats-number">{{todayStats.pendingProblems}}</text>
+        <text class="stats-label">待处理</text>
+      </view>
+    </view>
   </view>
 </view>
