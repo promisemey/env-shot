@@ -127,6 +127,25 @@
       box-shadow: var(--td-shadow-2);
     }
     
+    &.demo {
+      border: 2rpx dashed #faad14;
+      background: linear-gradient(135deg, #fff7e6 0%, #fffbf0 100%);
+      position: relative;
+      
+      &::after {
+        content: 'DEV';
+        position: absolute;
+        top: 8rpx;
+        right: 8rpx;
+        font-size: 18rpx;
+        color: #faad14;
+        background: rgba(250, 173, 20, 0.1);
+        padding: 4rpx 8rpx;
+        border-radius: 8rpx;
+        font-weight: bold;
+      }
+    }
+    
     .menu-icon {
       margin-bottom: 16rpx;
     }

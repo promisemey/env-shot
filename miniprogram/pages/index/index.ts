@@ -1,6 +1,7 @@
 // pages/index/index.ts
 import { problemApi, utils } from "../../services/api";
 import { User, EnvironmentProblem } from "../../types/index";
+import { AuthManager } from "../../utils/auth";
 
 interface IndexPageData {
   userInfo: User;
@@ -16,7 +17,7 @@ interface IndexPageData {
   })[];
 }
 
-Page<IndexPageData>({
+Page<IndexPageData, any>({
   data: {
     userInfo: {} as User,
     stats: {
@@ -40,13 +41,13 @@ Page<IndexPageData>({
 
   // 检查登录状态
   checkLoginStatus() {
-    // const token = wx.getStorageSync("token");
-    // if (!token) {
-    //   wx.redirectTo({
-    //     url: "/pages/login/login",
-    //   });
-    //   return;
-    // }
+    if (!AuthManager.isLoggedIn()) {
+      wx.redirectTo({
+        url: "/pages/login/login",
+      });
+      return false;
+    }
+    return true;
   },
 
   // 加载用户信息
@@ -137,9 +138,19 @@ Page<IndexPageData>({
     return statusMap[status] || "未知";
   },
 
-  // 页面导航
+  // 页面导航 - 加入权限检查
   navigateTo(e: any) {
     const url = e.currentTarget.dataset.url;
+
+    // 检查页面访问权限
+    if (!AuthManager.canAccessPage(url)) {
+      wx.showToast({
+        title: "无权限访问此页面",
+        icon: "none",
+      });
+      return;
+    }
+
     wx.navigateTo({
       url,
     });
@@ -153,4 +164,3 @@ Page<IndexPageData>({
     });
   },
 });
-

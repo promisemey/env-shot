@@ -1,5 +1,7 @@
 // pages/login/login.ts
 import { userApi } from "../../services/api";
+import { AuthManager } from "../../utils/auth";
+import { User } from "../../types/index";
 
 interface LoginPageData {
   phone: string;
@@ -11,7 +13,7 @@ interface LoginPageData {
   countdown: number;
 }
 
-Page<LoginPageData>({
+Page<LoginPageData, any>({
   data: {
     phone: "",
     code: "",
@@ -166,10 +168,62 @@ Page<LoginPageData>({
         loginBtnDisabled: true,
         loginBtnText: "登录中...",
       });
-      wx.switchTab({
-        url: "/pages/index/index",
+
+      // 模拟登录逻辑 - 根据手机号判断用户角色
+      let userRole: "admin" | "user" = "user";
+      let userName = "普通用户";
+      let communityId = "1"; // 默认社区
+
+      // 管理员手机号规则：以138开头的为管理员
+      if (phone.startsWith("138")) {
+        userRole = "admin";
+        userName = "系统管理员";
+        communityId = ""; // 管理员不固定社区
+      } else {
+        // 普通用户根据手机号后两位分配社区
+        const lastTwoDigits = parseInt(phone.slice(-2));
+        communityId = String((lastTwoDigits % 13) + 1);
+      }
+
+      // 构造用户信息
+      const mockUser: User = {
+        id: `user_${phone}`,
+        phone: phone,
+        name: userName,
+        role: userRole,
+        communityId: userRole === "user" ? communityId : undefined,
+        createTime: Date.now(),
+        updateTime: Date.now(),
+      };
+
+      // 模拟token
+      const mockToken = `mock_token_${Date.now()}_${phone}`;
+
+      // 保存用户信息和token
+      wx.setStorageSync("token", mockToken);
+      wx.setStorageSync("userInfo", mockUser);
+
+      wx.showToast({
+        title: "登录成功",
+        icon: "success",
       });
-      return;
+
+      // 根据用户角色跳转到对应页面
+      setTimeout(() => {
+        const defaultPage = AuthManager.getDefaultPageForRole();
+        if (defaultPage.includes("admin") || defaultPage.includes("user")) {
+          wx.switchTab({
+            url: defaultPage,
+          });
+        } else {
+          wx.switchTab({
+            url: "/pages/index/index",
+          });
+        }
+      }, 1500);
+
+      // 原有的API调用逻辑（注释掉，供参考）
+      /*
       const res = await userApi.loginByPhone(phone, code);
 
       if (res.success && res.data) {
@@ -198,6 +252,7 @@ Page<LoginPageData>({
           loginBtnText: "登录",
         });
       }
+      */
     } catch (error) {
       console.error("登录失败:", error);
       wx.showToast({
@@ -229,4 +284,3 @@ Page<LoginPageData>({
     });
   },
 });
-

@@ -1,6 +1,7 @@
 // pages/admin/admin.ts
 import { problemApi, communityApi } from "../../services/api";
 import { User, Community } from "../../types/index";
+import { AuthManager, Permission } from "../../utils/auth";
 
 interface AdminPageData {
   userInfo: User;
@@ -12,7 +13,7 @@ interface AdminPageData {
   };
 }
 
-Page<AdminPageData>({
+Page<AdminPageData, any>({
   data: {
     userInfo: {} as User,
     selectedCommunity: null,
@@ -35,17 +36,22 @@ Page<AdminPageData>({
 
   // 检查管理员权限
   checkAdminPermission() {
-    // const userInfo = wx.getStorageSync("userInfo");
-    // if (!userInfo || userInfo.role !== "admin") {
-    //   wx.showToast({
-    //     title: "无权限访问",
-    //     icon: "none",
-    //   });
-    //   wx.switchTab({
-    //     url: "/pages/index/index",
-    //   });
-    //   return;
-    // }
+    if (!AuthManager.checkPagePermission("/pages/admin/admin")) {
+      return false;
+    }
+
+    if (!AuthManager.isAdmin()) {
+      wx.showToast({
+        title: "需要管理员权限",
+        icon: "none",
+      });
+      wx.switchTab({
+        url: "/pages/index/index",
+      });
+      return false;
+    }
+
+    return true;
   },
 
   // 加载用户信息
@@ -115,4 +121,3 @@ Page<AdminPageData>({
     });
   },
 });
-

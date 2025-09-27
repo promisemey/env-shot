@@ -3,14 +3,10 @@
   <!-- 搜索栏 -->
   <view class="search-section">
     <view class="search-bar">
-      <input 
-        class="search-input" 
-        placeholder="搜索社区名称或地址" 
-        value="{{searchKeyword}}" 
-        bindinput="onSearchInput"
-      />
-      <view class="search-btn" bindtap="searchCommunities">
-        <text class="search-icon">🔍</text>
+      <t-icon name="search" size="28rpx" color="#666"></t-icon>
+      <input class="search-input" placeholder="搜索社区名称或地址" value="{{searchKeyword}}" bindinput="onSearchInput" />
+      <view class="clear-btn" wx:if="{{searchKeyword}}" bindtap="onSearchInput">
+        <t-icon name="close-circle" size="24rpx" color="#ccc"></t-icon>
       </view>
     </view>
   </view>
@@ -18,37 +14,40 @@
   <!-- 社区列表 -->
   <view class="community-list">
     <view class="list-header">
-      <text class="list-title">社区列表</text>
-      <text class="list-count">共{{communities.length}}个社区</text>
+      <view class="header-content">
+        <t-icon name="location" size="28rpx" color="#1296db"></t-icon>
+        <text class="list-title">社区列表</text>
+      </view>
+      <text class="list-count">共{{filteredCommunities.length}}个社区</text>
     </view>
 
-    <view class="community-item" wx:for="{{communities}}" wx:key="id" bindtap="selectCommunity" data-community="{{item}}">
+    <view class="community-item {{selectedCommunityId === item.id ? 'selected' : ''}}" wx:for="{{filteredCommunities}}" wx:key="id" bindtap="selectCommunity" data-community="{{item}}">
       <view class="community-info">
-        <text class="community-name">{{item.name}}</text>
+        <view class="community-header">
+          <text class="community-name">{{item.name}}</text>
+          <view class="select-indicator" wx:if="{{selectedCommunityId === item.id}}">
+            <t-icon name="check-circle" size="32rpx" color="#1296db"></t-icon>
+          </view>
+        </view>
         <text class="community-address">{{item.address}}</text>
-        <text class="community-desc" wx:if="{{item.description}}">{{item.description}}</text>
-      </view>
-      
-      <view class="community-actions">
-        <view class="action-btn" bindtap="viewCommunityDetail" data-id="{{item.id}}" catchtap="true">
-          <text class="action-text">详情</text>
-        </view>
-        <view class="select-btn {{selectedCommunityId === item.id ? 'selected' : ''}}">
-          <text class="select-text">{{selectedCommunityId === item.id ? '已选择' : '选择'}}</text>
-        </view>
       </view>
     </view>
 
     <!-- 空状态 -->
-    <view class="empty-state" wx:if="{{communities.length === 0}}">
-      <text class="empty-icon">🏘️</text>
-      <text class="empty-text">暂无社区数据</text>
-      <text class="empty-desc">请联系系统管理员添加社区信息</text>
+    <view class="empty-state" wx:if="{{filteredCommunities.length === 0}}">
+      <view class="empty-icon">
+        <t-icon name="location" size="120rpx" color="#e8e8e8"></t-icon>
+      </view>
+      <text class="empty-text">暂无匹配的社区</text>
+      <text class="empty-desc">请尝试修改搜索关键词</text>
     </view>
   </view>
 
   <!-- 底部操作栏 -->
   <view class="bottom-actions" wx:if="{{selectedCommunityId}}">
-    <button class="confirm-btn" bindtap="confirmSelection">确认选择</button>
+    <button class="confirm-btn" bindtap="confirmSelection">
+      <t-icon name="check" size="24rpx" color="#ffffff"></t-icon>
+      <text class="btn-text">确认选择</text>
+    </button>
   </view>
 </view>

@@ -5,45 +5,6 @@
   padding-bottom: 120rpx;
 }
 
-/* 社区信息 */
-.community-info {
-  background: #ffffff;
-  padding: 30rpx;
-  margin-bottom: 20rpx;
-  
-  .community-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20rpx;
-    
-    .community-title {
-      font-size: 28rpx;
-      font-weight: bold;
-      color: #333;
-    }
-    
-    .change-btn {
-      font-size: 24rpx;
-      color: #1296db;
-    }
-  }
-  
-  .community-name {
-    display: block;
-    font-size: 32rpx;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 10rpx;
-  }
-  
-  .community-address {
-    display: block;
-    font-size: 24rpx;
-    color: #666;
-  }
-}
-
 /* 表单区域 */
 .form-section {
   background: #ffffff;

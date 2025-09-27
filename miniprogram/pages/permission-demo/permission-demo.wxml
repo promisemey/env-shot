@@ -1,0 +1,111 @@
+<!--pages/permission-demo/permission-demo.wxml-->
+<view class="demo-container">
+  <!-- 当前用户信息 -->
+  <view class="user-info-section">
+    <view class="section-header">
+      <t-icon name="user" size="28rpx" color="#1296db"></t-icon>
+      <text class="section-title">当前用户信息</text>
+    </view>
+    
+    <view class="user-card">
+      <view class="user-avatar">
+        <t-icon name="{{userInfo.role === 'admin' ? 'user-setting' : 'user'}}" size="48rpx" color="#1296db"></t-icon>
+      </view>
+      <view class="user-details">
+        <text class="user-name">{{userInfo.name || '未登录'}}</text>
+        <text class="user-role">{{userInfo.role === 'admin' ? '管理员' : userInfo.role === 'user' ? '普通用户' : '未知角色'}}</text>
+        <text class="user-phone">{{userInfo.phone || '无手机号'}}</text>
+        <text class="user-community" wx:if="{{userInfo.communityId}}">所属社区: {{communityName}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 权限列表 -->
+  <view class="permissions-section">
+    <view class="section-header">
+      <t-icon name="lock-on" size="28rpx" color="#1296db"></t-icon>
+      <text class="section-title">权限列表</text>
+    </view>
+    
+    <view class="permission-list">
+      <view 
+        class="permission-item {{item.hasPermission ? 'granted' : 'denied'}}" 
+        wx:for="{{permissions}}" 
+        wx:key="name"
+      >
+        <view class="permission-info">
+          <t-icon 
+            name="{{item.hasPermission ? 'check-circle' : 'close-circle'}}" 
+            size="32rpx" 
+            color="{{item.hasPermission ? '#52c41a' : '#f5222d'}}"
+          ></t-icon>
+          <view class="permission-details">
+            <text class="permission-name">{{item.name}}</text>
+            <text class="permission-desc">{{item.description}}</text>
+          </view>
+        </view>
+        <view class="permission-status">
+          <text class="status-text {{item.hasPermission ? 'granted' : 'denied'}}">
+            {{item.hasPermission ? '已授权' : '无权限'}}
+          </text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 页面访问权限 -->
+  <view class="page-access-section">
+    <view class="section-header">
+      <t-icon name="view-list" size="28rpx" color="#1296db"></t-icon>
+      <text class="section-title">页面访问权限</text>
+    </view>
+    
+    <view class="page-list">
+      <view 
+        class="page-item {{item.canAccess ? 'allowed' : 'forbidden'}}" 
+        wx:for="{{pageAccess}}" 
+        wx:key="path"
+        bindtap="testPageAccess"
+        data-path="{{item.path}}"
+      >
+        <view class="page-info">
+          <t-icon name="{{item.icon}}" size="32rpx" color="{{item.canAccess ? '#52c41a' : '#f5222d'}}"></t-icon>
+          <view class="page-details">
+            <text class="page-title">{{item.title}}</text>
+            <text class="page-path">{{item.path}}</text>
+          </view>
+        </view>
+        <view class="access-status">
+          <t-icon 
+            name="{{item.canAccess ? 'chevron-right' : 'close-circle'}}" 
+            size="24rpx" 
+            color="{{item.canAccess ? '#999' : '#f5222d'}}"
+          ></t-icon>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 角色切换测试 -->
+  <view class="role-switch-section">
+    <view class="section-header">
+      <t-icon name="swap" size="28rpx" color="#1296db"></t-icon>
+      <text class="section-title">角色切换测试</text>
+    </view>
+    
+    <view class="switch-buttons">
+      <button class="switch-btn admin" bindtap="switchToAdmin">
+        <t-icon name="user-setting" size="24rpx" color="#ffffff"></t-icon>
+        <text class="btn-text">切换到管理员</text>
+      </button>
+      <button class="switch-btn user" bindtap="switchToUser">
+        <t-icon name="user" size="24rpx" color="#ffffff"></t-icon>
+        <text class="btn-text">切换到普通用户</text>
+      </button>
+      <button class="switch-btn logout" bindtap="logout">
+        <t-icon name="logout" size="24rpx" color="#ffffff"></t-icon>
+        <text class="btn-text">退出登录</text>
+      </button>
+    </view>
+  </view>
+</view>

@@ -70,6 +70,15 @@
           <text class="menu-desc">上传整改照片</text>
         </view>
       </block>
+      
+      <!-- 权限演示功能（开发测试用） -->
+      <view class="menu-item demo" bindtap="navigateTo" data-url="/pages/permission-demo/permission-demo">
+        <view class="menu-icon">
+          <t-icon name="lock-on" size="48rpx" color="#faad14"></t-icon>
+        </view>
+        <text class="menu-text">权限演示</text>
+        <text class="menu-desc">查看权限控制</text>
+      </view>
     </view>
   </view>
 

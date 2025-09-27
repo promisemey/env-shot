@@ -10,6 +10,7 @@
     "pages/user/problem-list/problem-list",
     "pages/user/upload-fix/upload-fix",
     "pages/user/problem-detail/problem-detail",
+    "pages/permission-demo/permission-demo",
     "pages/logs/logs"
   ],
   "window": {

@@ -47,8 +47,8 @@
           <t-icon name="camera" size="56rpx" color="#e34d59"></t-icon>
         </view>
         <view class="card-content">
-          <text class="card-title">上传问题</text>
-          <text class="card-desc">拍照上传环境问题</text>
+          <text class="card-title">问题上报</text>
+          <text class="card-desc">选择社区上传问题照片</text>
         </view>
         <view class="card-arrow">
           <t-icon name="chevron-right" size="32rpx" color="var(--td-gray-color-4)"></t-icon>

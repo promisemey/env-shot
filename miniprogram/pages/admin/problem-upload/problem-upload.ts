@@ -1,21 +1,132 @@
 // pages/admin/problem-upload/problem-upload.ts
 import { problemApi, uploadApi } from "../../../services/api";
-import {
-  Community,
-  PROBLEM_CATEGORIES,
-  SEVERITY_LEVELS,
-} from "../../../types/index";
+import { Community } from "../../../types/index";
+
+// 固定的社区列表
+const FIXED_COMMUNITIES: Community[] = [
+  {
+    id: "1",
+    name: "社区",
+    address: "社区地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "2",
+    name: "杨公",
+    address: "杨公地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "3",
+    name: "大桥",
+    address: "大桥地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "4",
+    name: "朱集",
+    address: "朱集地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "5",
+    name: "双庙",
+    address: "双庙地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "6",
+    name: "陈庙",
+    address: "陈庙地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "7",
+    name: "汤王",
+    address: "汤王地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "8",
+    name: "黄圩",
+    address: "黄圩地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "9",
+    name: "杨郢",
+    address: "杨郢地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "10",
+    name: "胡岗",
+    address: "胡岗地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "11",
+    name: "杨祠",
+    address: "杨祠地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "12",
+    name: "桃园",
+    address: "桃园地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "13",
+    name: "前瓦",
+    address: "前瓦地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+];
 
 interface ProblemUploadPageData {
-  selectedCommunity: Community | null;
-  problemData: {
-    title: string;
-    description: string;
-    categoryIndex: number;
-    categoryText: string;
-    severityIndex: number;
-    severityText: string;
-  };
+  communities: Community[];
+  selectedCommunityIndex: number;
+  selectedCommunityText: string;
   photos: string[];
   location: {
     latitude: number;
@@ -26,17 +137,11 @@ interface ProblemUploadPageData {
   submitBtnText: string;
 }
 
-Page<ProblemUploadPageData>({
+Page<ProblemUploadPageData, any>({
   data: {
-    selectedCommunity: null,
-    problemData: {
-      title: "",
-      description: "",
-      categoryIndex: 0,
-      categoryText: "请选择问题分类",
-      severityIndex: 0,
-      severityText: "请选择严重程度",
-    },
+    communities: FIXED_COMMUNITIES,
+    selectedCommunityIndex: -1,
+    selectedCommunityText: "请选择社区",
     photos: [],
     location: null,
     submitDisabled: false,
@@ -44,64 +149,16 @@ Page<ProblemUploadPageData>({
   },
 
   onLoad() {
-    this.loadSelectedCommunity();
+    // 页面加载时不需要特别处理
   },
 
-  // 加载选中的社区
-  loadSelectedCommunity() {
-    const selectedCommunity = wx.getStorageSync("selectedCommunity");
-    if (selectedCommunity) {
-      this.setData({ selectedCommunity });
-    } else {
-      wx.showModal({
-        title: "提示",
-        content: "请先选择要管理的社区",
-        showCancel: false,
-        success: () => {
-          wx.navigateBack();
-        },
-      });
-    }
-  },
-
-  // 切换社区
-  changeCommunity() {
-    wx.navigateTo({
-      url: "/pages/admin/community-select/community-select",
-    });
-  },
-
-  // 标题输入
-  onTitleInput(e: any) {
-    this.setData({
-      "problemData.title": e.detail.value,
-    });
-  },
-
-  // 描述输入
-  onDescriptionInput(e: any) {
-    this.setData({
-      "problemData.description": e.detail.value,
-    });
-  },
-
-  // 分类选择
-  onCategoryChange(e: any) {
+  // 社区选择
+  onCommunityChange(e: any) {
     const index = e.detail.value;
-    const category = PROBLEM_CATEGORIES[index];
+    const community = this.data.communities[index];
     this.setData({
-      "problemData.categoryIndex": index,
-      "problemData.categoryText": category.label,
-    });
-  },
-
-  // 严重程度选择
-  onSeverityChange(e: any) {
-    const index = e.detail.value;
-    const severity = SEVERITY_LEVELS[index];
-    this.setData({
-      "problemData.severityIndex": index,
-      "problemData.severityText": severity.label,
+      selectedCommunityIndex: index,
+      selectedCommunityText: community.name,
     });
   },
 
@@ -211,36 +268,12 @@ Page<ProblemUploadPageData>({
 
   // 提交问题
   async submitProblem() {
-    const { selectedCommunity, problemData, photos, location } = this.data;
+    const { communities, selectedCommunityIndex, photos, location } = this.data;
 
     // 验证必填字段
-    if (!problemData.title.trim()) {
+    if (selectedCommunityIndex === -1) {
       wx.showToast({
-        title: "请输入问题标题",
-        icon: "none",
-      });
-      return;
-    }
-
-    if (!problemData.description.trim()) {
-      wx.showToast({
-        title: "请输入问题描述",
-        icon: "none",
-      });
-      return;
-    }
-
-    if (problemData.categoryText === "请选择问题分类") {
-      wx.showToast({
-        title: "请选择问题分类",
-        icon: "none",
-      });
-      return;
-    }
-
-    if (problemData.severityText === "请选择严重程度") {
-      wx.showToast({
-        title: "请选择严重程度",
+        title: "请选择社区",
         icon: "none",
       });
       return;
@@ -275,14 +308,15 @@ Page<ProblemUploadPageData>({
 
       // 获取用户信息
       const userInfo = wx.getStorageSync("userInfo");
+      const selectedCommunity = communities[selectedCommunityIndex];
 
       // 构建问题数据
       const problemDataToSubmit = {
-        communityId: selectedCommunity!.id,
-        title: problemData.title.trim(),
-        description: problemData.description.trim(),
-        category: PROBLEM_CATEGORIES[problemData.categoryIndex].value,
-        severity: SEVERITY_LEVELS[problemData.severityIndex].value,
+        communityId: selectedCommunity.id,
+        title: `${selectedCommunity.name}环境问题上报`,
+        description: "通过照片上报的环境问题",
+        category: "other" as const,
+        severity: "medium" as const,
         status: "pending" as const,
         photos: uploadRes.data.urls,
         reporterId: userInfo.id,
@@ -308,14 +342,8 @@ Page<ProblemUploadPageData>({
 
         // 清空表单
         this.setData({
-          problemData: {
-            title: "",
-            description: "",
-            categoryIndex: 0,
-            categoryText: "请选择问题分类",
-            severityIndex: 0,
-            severityText: "请选择严重程度",
-          },
+          selectedCommunityIndex: -1,
+          selectedCommunityText: "请选择社区",
           photos: [],
           location: null,
         });
@@ -344,4 +372,3 @@ Page<ProblemUploadPageData>({
     }
   },
 });
-

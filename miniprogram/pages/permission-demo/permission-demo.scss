@@ -1,0 +1,271 @@
+/* pages/permission-demo/permission-demo.scss */
+.demo-container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  padding: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+  
+  .section-title {
+    font-size: 32rpx;
+    font-weight: bold;
+    color: #333;
+  }
+}
+
+/* 用户信息部分 */
+.user-info-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+  
+  .user-card {
+    display: flex;
+    align-items: center;
+    gap: 24rpx;
+    
+    .user-avatar {
+      width: 80rpx;
+      height: 80rpx;
+      background: #f0f8ff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .user-details {
+      flex: 1;
+      
+      .user-name {
+        display: block;
+        font-size: 32rpx;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8rpx;
+      }
+      
+      .user-role {
+        display: block;
+        font-size: 26rpx;
+        color: #1296db;
+        margin-bottom: 6rpx;
+        font-weight: 500;
+      }
+      
+      .user-phone {
+        display: block;
+        font-size: 24rpx;
+        color: #666;
+        margin-bottom: 6rpx;
+      }
+      
+      .user-community {
+        display: block;
+        font-size: 24rpx;
+        color: #666;
+      }
+    }
+  }
+}
+
+/* 权限列表部分 */
+.permissions-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+  
+  .permission-list {
+    .permission-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24rpx 0;
+      border-bottom: 1rpx solid #f0f0f0;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &.granted {
+        background: rgba(82, 196, 26, 0.02);
+        border-radius: 8rpx;
+        padding: 24rpx 16rpx;
+        margin-bottom: 8rpx;
+      }
+      
+      &.denied {
+        background: rgba(245, 34, 45, 0.02);
+        border-radius: 8rpx;
+        padding: 24rpx 16rpx;
+        margin-bottom: 8rpx;
+      }
+      
+      .permission-info {
+        display: flex;
+        align-items: center;
+        gap: 16rpx;
+        flex: 1;
+        
+        .permission-details {
+          .permission-name {
+            display: block;
+            font-size: 28rpx;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 6rpx;
+          }
+          
+          .permission-desc {
+            display: block;
+            font-size: 24rpx;
+            color: #666;
+            line-height: 1.4;
+          }
+        }
+      }
+      
+      .permission-status {
+        .status-text {
+          font-size: 24rpx;
+          padding: 6rpx 12rpx;
+          border-radius: 12rpx;
+          
+          &.granted {
+            background: #f6ffed;
+            color: #52c41a;
+          }
+          
+          &.denied {
+            background: #fff2f0;
+            color: #f5222d;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* 页面访问权限部分 */
+.page-access-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+  
+  .page-list {
+    .page-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20rpx 16rpx;
+      border-radius: 8rpx;
+      margin-bottom: 12rpx;
+      transition: all 0.2s;
+      
+      &:active {
+        transform: scale(0.98);
+      }
+      
+      &.allowed {
+        background: rgba(82, 196, 26, 0.05);
+        border: 1rpx solid rgba(82, 196, 26, 0.2);
+      }
+      
+      &.forbidden {
+        background: rgba(245, 34, 45, 0.05);
+        border: 1rpx solid rgba(245, 34, 45, 0.2);
+      }
+      
+      .page-info {
+        display: flex;
+        align-items: center;
+        gap: 16rpx;
+        flex: 1;
+        
+        .page-details {
+          .page-title {
+            display: block;
+            font-size: 28rpx;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4rpx;
+          }
+          
+          .page-path {
+            display: block;
+            font-size: 22rpx;
+            color: #999;
+            font-family: 'Monaco', 'Consolas', monospace;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* 角色切换部分 */
+.role-switch-section {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
+  
+  .switch-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 16rpx;
+    
+    .switch-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12rpx;
+      padding: 24rpx;
+      border-radius: 12rpx;
+      border: none;
+      font-size: 28rpx;
+      font-weight: 500;
+      transition: all 0.2s;
+      
+      &:active {
+        transform: scale(0.98);
+      }
+      
+      &.admin {
+        background: #1296db;
+        
+        .btn-text {
+          color: #ffffff;
+        }
+      }
+      
+      &.user {
+        background: #52c41a;
+        
+        .btn-text {
+          color: #ffffff;
+        }
+      }
+      
+      &.logout {
+        background: #f5222d;
+        
+        .btn-text {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}

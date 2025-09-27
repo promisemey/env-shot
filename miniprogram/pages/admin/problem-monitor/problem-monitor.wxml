@@ -3,64 +3,84 @@
   <!-- 统计概览 -->
   <view class="stats-overview">
     <view class="stats-title">
-      <text class="title">问题监控概览</text>
-      <text class="refresh-btn" bindtap="refreshData">刷新</text>
+      <view class="title-content">
+        <t-icon name="chart-bar" size="28rpx" color="#1296db"></t-icon>
+        <text class="title">问题监控概览</text>
+      </view>
+      <view class="refresh-btn" bindtap="refreshData">
+        <t-icon name="refresh" size="24rpx" color="#1296db"></t-icon>
+        <text class="refresh-text">刷新</text>
+      </view>
     </view>
-    
+
     <view class="stats-grid">
-      <view class="stats-item">
+      <view class="stats-item total">
+        <view class="stats-icon">
+          <t-icon name="layers" size="40rpx" color="#1296db"></t-icon>
+        </view>
         <text class="stats-number">{{overviewStats.total}}</text>
         <text class="stats-label">总问题数</text>
       </view>
-      
-      <view class="stats-item">
+
+      <view class="stats-item pending">
+        <view class="stats-icon">
+          <t-icon name="time" size="40rpx" color="#faad14"></t-icon>
+        </view>
         <text class="stats-number">{{overviewStats.pending}}</text>
         <text class="stats-label">待处理</text>
       </view>
-      
-      <view class="stats-item">
+
+      <view class="stats-item processing">
+        <view class="stats-icon">
+          <t-icon name="loading" size="40rpx" color="#1890ff"></t-icon>
+        </view>
         <text class="stats-number">{{overviewStats.processing}}</text>
         <text class="stats-label">处理中</text>
       </view>
-      
-      <view class="stats-item">
+
+      <view class="stats-item fixed">
+        <view class="stats-icon">
+          <t-icon name="check-circle" size="40rpx" color="#52c41a"></t-icon>
+        </view>
         <text class="stats-number">{{overviewStats.fixed}}</text>
         <text class="stats-label">已整改</text>
       </view>
     </view>
-    
+
     <view class="fix-rate">
-      <text class="rate-label">整改率</text>
+      <view class="rate-content">
+        <t-icon name="chart-pie" size="32rpx" color="#ffffff"></t-icon>
+        <text class="rate-label">整改率</text>
+      </view>
       <text class="rate-value">{{overviewStats.fixRate}}%</text>
     </view>
   </view>
 
   <!-- 筛选条件 -->
   <view class="filter-section">
+    <view class="filter-header">
+      <t-icon name="filter" size="28rpx" color="#1296db"></t-icon>
+      <text class="filter-title">筛选条件</text>
+    </view>
+
     <view class="filter-row">
-      <picker 
-        class="filter-picker" 
-        range="{{communities}}" 
-        range-key="name" 
-        value="{{selectedCommunityIndex}}" 
-        bindchange="onCommunityChange"
-      >
+      <picker class="filter-picker" value="{{selectedCommunityIndex}}" bindchange="onCommunityChange">
         <view class="picker-display">
-          <text class="picker-text">{{selectedCommunityText}}</text>
-          <text class="picker-arrow">></text>
+          <view class="picker-content">
+            <t-icon name="location" size="24rpx" color="#666"></t-icon>
+            <text class="picker-text">{{selectedCommunityText}}</text>
+          </view>
+          <t-icon name="chevron-down" size="24rpx" color="#999"></t-icon>
         </view>
       </picker>
-      
-      <picker 
-        class="filter-picker" 
-        range="{{statusOptions}}" 
-        range-key="label" 
-        value="{{selectedStatusIndex}}" 
-        bindchange="onStatusChange"
-      >
+
+      <picker class="filter-picker" range="{{statusOptions}}" range-key="label" value="{{selectedStatusIndex}}" bindchange="onStatusChange">
         <view class="picker-display">
-          <text class="picker-text">{{selectedStatusText}}</text>
-          <text class="picker-arrow">></text>
+          <view class="picker-content">
+            <t-icon name="bulletpoint" size="24rpx" color="#666"></t-icon>
+            <text class="picker-text">{{selectedStatusText}}</text>
+          </view>
+          <t-icon name="chevron-down" size="24rpx" color="#999"></t-icon>
         </view>
       </picker>
     </view>
@@ -69,7 +89,10 @@
   <!-- 问题列表 -->
   <view class="problem-list">
     <view class="list-header">
-      <text class="list-title">问题列表</text>
+      <view class="header-content">
+        <t-icon name="view-list" size="28rpx" color="#1296db"></t-icon>
+        <text class="list-title">问题列表</text>
+      </view>
       <text class="list-count">共{{problems.length}}个问题</text>
     </view>
 
@@ -77,49 +100,48 @@
       <view class="problem-header">
         <text class="problem-title">{{item.title}}</text>
         <view class="problem-status {{item.status}}">
+          <t-icon name="{{item.status === 'pending' ? 'time' : item.status === 'processing' ? 'loading' : item.status === 'fixed' ? 'check-circle' : 'close-circle'}}" size="20rpx" color="{{item.status === 'pending' ? '#faad14' : item.status === 'processing' ? '#1890ff' : item.status === 'fixed' ? '#52c41a' : '#666666'}}"></t-icon>
           <text class="status-text">{{item.statusText}}</text>
         </view>
       </view>
-      
+
       <text class="problem-desc">{{item.description}}</text>
-      
+
       <view class="problem-meta">
         <view class="meta-item">
-          <text class="meta-label">社区:</text>
+          <t-icon name="location" size="20rpx" color="#999"></t-icon>
           <text class="meta-value">{{item.communityName}}</text>
         </view>
         <view class="meta-item">
-          <text class="meta-label">分类:</text>
+          <t-icon name="label" size="20rpx" color="#999"></t-icon>
           <text class="meta-value">{{item.categoryText}}</text>
         </view>
         <view class="meta-item">
-          <text class="meta-label">严重程度:</text>
+          <t-icon name="error-circle" size="20rpx" color="{{item.severity === 'low' ? '#52c41a' : item.severity === 'medium' ? '#faad14' : '#f5222d'}}"></t-icon>
           <text class="meta-value severity-{{item.severity}}">{{item.severityText}}</text>
         </view>
       </view>
-      
+
       <view class="problem-photos">
-        <image 
-          wx:for="{{item.photos}}" 
-          wx:key="*this" 
-          src="{{item}}" 
-          mode="aspectFill"
-          bindtap="previewPhoto" 
-          data-photos="{{item.photos}}" 
-          data-current="{{item}}"
-        ></image>
+        <image wx:for="{{item.photos}}" wx:key="*this" src="{{item}}" mode="aspectFill" bindtap="previewPhoto" data-photos="{{item.photos}}" data-current="{{item}}"></image>
       </view>
-      
+
       <view class="problem-footer">
-        <text class="problem-time">{{item.createTime}}</text>
+        <view class="time-info">
+          <t-icon name="time" size="20rpx" color="#999"></t-icon>
+          <text class="problem-time">{{item.createTime}}</text>
+        </view>
         <view class="problem-actions">
           <view class="action-btn" wx:if="{{item.status === 'pending'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="processing" catchtap="true">
+            <t-icon name="play-circle" size="20rpx" color="#ffffff"></t-icon>
             <text class="action-text">开始处理</text>
           </view>
-          <view class="action-btn" wx:if="{{item.status === 'processing'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="fixed" catchtap="true">
+          <view class="action-btn success" wx:if="{{item.status === 'processing'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="fixed" catchtap="true">
+            <t-icon name="check-circle" size="20rpx" color="#ffffff"></t-icon>
             <text class="action-text">标记整改</text>
           </view>
-          <view class="action-btn" wx:if="{{item.status === 'fixed'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="closed" catchtap="true">
+          <view class="action-btn danger" wx:if="{{item.status === 'fixed'}}" bindtap="updateStatus" data-id="{{item.id}}" data-status="closed" catchtap="true">
+            <t-icon name="close-circle" size="20rpx" color="#ffffff"></t-icon>
             <text class="action-text">关闭问题</text>
           </view>
         </view>
@@ -128,13 +150,16 @@
 
     <!-- 空状态 -->
     <view class="empty-state" wx:if="{{problems.length === 0 && !loading}}">
-      <text class="empty-icon">📊</text>
+      <view class="empty-icon">
+        <t-icon name="chart-bar" size="120rpx" color="#e8e8e8"></t-icon>
+      </view>
       <text class="empty-text">暂无问题数据</text>
       <text class="empty-desc">当前筛选条件下没有找到问题</text>
     </view>
 
     <!-- 加载状态 -->
     <view class="loading-state" wx:if="{{loading}}">
+      <t-icon name="loading" size="40rpx" color="#1296db"></t-icon>
       <text class="loading-text">加载中...</text>
     </view>
   </view>

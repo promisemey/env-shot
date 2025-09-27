@@ -1,6 +1,128 @@
 // pages/user/user.ts
 import { problemApi, communityApi } from "../../services/api";
 import { User, Community, EnvironmentProblem } from "../../types/index";
+import { AuthManager, Permission } from "../../utils/auth";
+
+// 固定的社区列表
+const FIXED_COMMUNITIES: Community[] = [
+  {
+    id: "1",
+    name: "社区",
+    address: "社区地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "2",
+    name: "杨公",
+    address: "杨公地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "3",
+    name: "大桥",
+    address: "大桥地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "4",
+    name: "朱集",
+    address: "朱集地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "5",
+    name: "双庙",
+    address: "双庙地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "6",
+    name: "陈庙",
+    address: "陈庙地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "7",
+    name: "汤王",
+    address: "汤王地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "8",
+    name: "黄圩",
+    address: "黄圩地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "9",
+    name: "杨郢",
+    address: "杨郢地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "10",
+    name: "胡岗",
+    address: "胡岗地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "11",
+    name: "杨祠",
+    address: "杨祠地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "12",
+    name: "桃园",
+    address: "桃园地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+  {
+    id: "13",
+    name: "前瓦",
+    address: "前瓦地址",
+    latitude: 0,
+    longitude: 0,
+    createTime: Date.now(),
+    updateTime: Date.now(),
+  },
+];
 
 interface UserPageData {
   userInfo: User;
@@ -21,7 +143,7 @@ interface UserPageData {
   }>;
 }
 
-Page<UserPageData>({
+Page<UserPageData, any>({
   data: {
     userInfo: {} as User,
     userCommunity: null,
@@ -46,17 +168,22 @@ Page<UserPageData>({
 
   // 检查用户权限
   checkUserPermission() {
-    const userInfo = wx.getStorageSync("userInfo");
-    if (!userInfo || userInfo.role !== "user") {
+    if (!AuthManager.checkPagePermission("/pages/user/user")) {
+      return false;
+    }
+
+    if (!AuthManager.isUser()) {
       wx.showToast({
-        title: "无权限访问",
+        title: "需要用户权限",
         icon: "none",
       });
       wx.switchTab({
         url: "/pages/index/index",
       });
-      return;
+      return false;
     }
+
+    return true;
   },
 
   // 加载用户信息
@@ -72,9 +199,11 @@ Page<UserPageData>({
     try {
       const userInfo = wx.getStorageSync("userInfo");
       if (userInfo.communityId) {
-        const res = await communityApi.getCommunityById(userInfo.communityId);
-        if (res.success && res.data) {
-          this.setData({ userCommunity: res.data });
+        const community = FIXED_COMMUNITIES.find(
+          (c) => c.id === userInfo.communityId
+        );
+        if (community) {
+          this.setData({ userCommunity: community });
         }
       }
     } catch (error) {
@@ -145,13 +274,14 @@ Page<UserPageData>({
 
   // 获取活动图标
   getActivityIcon(status: string): string {
+    // 使用TDesign图标名称，由WXML渲染
     const iconMap: { [key: string]: string } = {
-      pending: "⏳",
-      processing: "🔄",
-      fixed: "✅",
-      closed: "🔒",
+      pending: "time",
+      processing: "loading",
+      fixed: "check-circle",
+      closed: "close-circle",
     };
-    return iconMap[status] || "📋";
+    return iconMap[status] || "bulletpoint";
   },
 
   // 获取状态文本
@@ -227,4 +357,3 @@ Page<UserPageData>({
     });
   },
 });
-

@@ -8,6 +8,19 @@
     "miniprogram": {
       "list": [
         {
+          "name": "pages/index/index",
+          "pathName": "pages/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null,
+          "partialCompile": {
+            "enabled": false,
+            "pages": [
+              "pages/permission-demo/permission-demo"
+            ]
+          }
+        },
+        {
           "name": "pages/admin/admin",
           "pathName": "pages/admin/admin",
           "query": "",

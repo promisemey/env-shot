@@ -9,7 +9,9 @@
 .search-section {
   background: #ffffff;
   padding: 30rpx;
-  border-bottom: 1rpx solid #eee;
+  margin: 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.06);
   
   .search-bar {
     display: flex;
@@ -17,10 +19,11 @@
     background: #f8f8f8;
     border-radius: 25rpx;
     padding: 0 20rpx;
+    height: 70rpx;
+    gap: 12rpx;
     
     .search-input {
       flex: 1;
-      height: 70rpx;
       font-size: 28rpx;
       color: #333;
       border: none;
@@ -28,40 +31,43 @@
       background: transparent;
     }
     
-    .search-btn {
-      width: 50rpx;
-      height: 50rpx;
+    .clear-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      
-      .search-icon {
-        font-size: 28rpx;
-        color: #666;
-      }
+      padding: 5rpx;
     }
   }
 }
 
 /* 社区列表 */
 .community-list {
+  padding: 0 20rpx;
+  
   .list-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30rpx;
-    background: #ffffff;
-    border-bottom: 1rpx solid #eee;
+    padding: 30rpx 0 20rpx;
     
-    .list-title {
-      font-size: 32rpx;
-      font-weight: bold;
-      color: #333;
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 12rpx;
+      
+      .list-title {
+        font-size: 32rpx;
+        font-weight: bold;
+        color: #333;
+      }
     }
     
     .list-count {
       font-size: 24rpx;
       color: #666;
+      background: #f0f0f0;
+      padding: 6rpx 12rpx;
+      border-radius: 12rpx;
     }
   }
   
@@ -69,83 +75,43 @@
     background: #ffffff;
     margin-bottom: 20rpx;
     padding: 30rpx;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-left: 6rpx solid transparent;
+    border-radius: 20rpx;
+    box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.08);
     transition: all 0.2s;
+    border: 2rpx solid transparent;
     
     &:active {
-      background: #f8f8f8;
+      transform: scale(0.98);
     }
     
     &.selected {
-      border-left-color: #1296db;
+      border-color: #1296db;
       background: #f0f8ff;
     }
     
     .community-info {
-      flex: 1;
-      margin-right: 20rpx;
-      
-      .community-name {
-        display: block;
-        font-size: 32rpx;
-        font-weight: bold;
-        color: #333;
+      .community-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 10rpx;
+        
+        .community-name {
+          font-size: 32rpx;
+          font-weight: bold;
+          color: #333;
+        }
+        
+        .select-indicator {
+          display: flex;
+          align-items: center;
+        }
       }
       
       .community-address {
         display: block;
-        font-size: 24rpx;
+        font-size: 26rpx;
         color: #666;
-        margin-bottom: 8rpx;
-      }
-      
-      .community-desc {
-        display: block;
-        font-size: 22rpx;
-        color: #999;
-        line-height: 1.4;
-      }
-    }
-    
-    .community-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 10rpx;
-      
-      .action-btn {
-        padding: 8rpx 16rpx;
-        background: #f0f0f0;
-        border-radius: 20rpx;
-        
-        .action-text {
-          font-size: 22rpx;
-          color: #666;
-        }
-      }
-      
-      .select-btn {
-        padding: 8rpx 16rpx;
-        border-radius: 20rpx;
-        background: #e6f7ff;
-        border: 1rpx solid #91d5ff;
-        
-        &.selected {
-          background: #1296db;
-          border-color: #1296db;
-        }
-        
-        .select-text {
-          font-size: 22rpx;
-          color: #1296db;
-          
-          .selected & {
-            color: #ffffff;
-          }
-        }
       }
     }
   }
@@ -155,8 +121,6 @@
     padding: 120rpx 60rpx;
     
     .empty-icon {
-      display: block;
-      font-size: 120rpx;
       margin-bottom: 30rpx;
     }
     
@@ -165,6 +129,7 @@
       font-size: 32rpx;
       color: #333;
       margin-bottom: 20rpx;
+      font-weight: 500;
     }
     
     .empty-desc {
@@ -196,5 +161,14 @@
     padding: 30rpx;
     font-size: 32rpx;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12rpx;
+    
+    .btn-text {
+      font-size: 32rpx;
+      font-weight: bold;
+    }
   }
 }

@@ -1,4 +1,5 @@
 {
+  "navigationBarTitleText": "首页",
   "usingComponents": {
     "navigation-bar": "/components/navigation-bar/navigation-bar",
     "t-cell": "tdesign-miniprogram/cell/cell",

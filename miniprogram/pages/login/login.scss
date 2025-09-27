@@ -117,7 +117,32 @@ page {
   }
 
   .form-fields {
-    margin-bottom: 48rpx;
+    margin-bottom: 32rpx;
+  }
+
+  /* 登录说明 */
+  .login-tips {
+    background: #f8f9fa;
+    border-radius: var(--td-radius-medium);
+    padding: 24rpx;
+    margin-bottom: 32rpx;
+    border: 1rpx solid #e9ecef;
+    
+    .tip-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12rpx;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+      
+      .tip-text {
+        font-size: 24rpx;
+        color: #666;
+        margin-left: 12rpx;
+      }
+    }
   }
 
   .field-item {
