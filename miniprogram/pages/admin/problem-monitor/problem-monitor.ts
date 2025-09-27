@@ -32,7 +32,7 @@ interface ProblemMonitorPageData {
   loading: boolean;
 }
 
-Page<ProblemMonitorPageData>({
+Page<ProblemMonitorPageData, any>({
   data: {
     overviewStats: {
       total: 0,

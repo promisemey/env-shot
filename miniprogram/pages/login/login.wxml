@@ -1,54 +1,38 @@
 <!--pages/login/login.wxml-->
 <view class="login-container">
   <view class="login-header">
-    <image class="logo" src="/images/logo.png" mode="aspectFit"></image>
+    <t-image class="logo" src="/images/logo.png" width="120rpx" height="120rpx" shape="round" mode="aspectFit"></t-image>
     <text class="title">社区环境管理</text>
     <text class="subtitle">共建美好家园</text>
   </view>
-
   <view class="login-form">
-    <view class="form-item">
-      <view class="input-wrapper">
-        <text class="label">手机号</text>
-        <input 
-          class="input" 
-          type="number" 
-          placeholder="请输入手机号" 
-          value="{{phone}}" 
-          bindinput="onPhoneInput"
-          maxlength="11"
-        />
-      </view>
-    </view>
+    <t-cell-group>
+      <t-cell>
+        <view slot="title" class="input-label">
+          <t-icon name="mobile" size="32rpx" color="#0052d9"></t-icon>
+          <text>手机号</text>
+        </view>
+        <t-input slot="right-icon" type="number" placeholder="请输入手机号" value="{{phone}}" bindchange="onPhoneInput" maxlength="11" clearable="{{true}}" />
+      </t-cell>
 
-    <view class="form-item">
-      <view class="input-wrapper">
-        <text class="label">验证码</text>
-        <input 
-          class="input code-input" 
-          type="number" 
-          placeholder="请输入验证码" 
-          value="{{code}}" 
-          bindinput="onCodeInput"
-          maxlength="6"
-        />
-        <button 
-          class="code-btn {{codeBtnDisabled ? 'disabled' : ''}}" 
-          bindtap="sendCode"
-          disabled="{{codeBtnDisabled}}"
-        >
-          {{codeBtnText}}
-        </button>
-      </view>
-    </view>
+      <t-cell>
+        <view slot="title" class="input-label">
+          <t-icon name="lock-on" size="32rpx" color="#0052d9"></t-icon>
+          <text>验证码</text>
+        </view>
+        <view slot="right-icon" class="code-input-wrapper">
+          <t-input type="number" placeholder="请输入验证码" value="{{code}}" bindchange="onCodeInput" maxlength="6" clearable="{{true}}" />
+          <t-button theme="primary" variant="outline" size="small" bindtap="sendCode" disabled="{{codeBtnDisabled}}" class="code-btn">
+            {{codeBtnText}}
+          </t-button>
+        </view>
+      </t-cell>
+    </t-cell-group>
 
-    <button 
-      class="login-btn {{loginBtnDisabled ? 'disabled' : ''}}" 
-      bindtap="login"
-      disabled="{{loginBtnDisabled}}"
-    >
+    <t-button theme="primary" size="large" block="{{true}}" bindtap="login" disabled="{{loginBtnDisabled}}" class="login-btn">
+      <t-icon name="login" size="32rpx" slot="icon"></t-icon>
       {{loginBtnText}}
-    </button>
+    </t-button>
   </view>
 
   <view class="login-footer">

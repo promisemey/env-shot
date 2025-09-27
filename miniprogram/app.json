@@ -15,11 +15,11 @@
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarBackgroundColor": "#ffffff",
-    "backgroundColor": "#f5f5f5"
+    "backgroundColor": "#f3f3f3"
   },
   "tabBar": {
     "color": "#666666",
-    "selectedColor": "#1296db",
+    "selectedColor": "#0052d9",
     "backgroundColor": "#ffffff",
     "borderStyle": "black",
     "list": [
@@ -42,12 +42,10 @@
       "desc": "您的位置信息将用于定位社区位置"
     }
   },
-  "style": "v2",
   "rendererOptions": {
     "skyline": {
       "defaultDisplayBlock": true,
       "defaultContentBox": true,
-      "tagNameStyleIsolation": "legacy",
       "disableABTest": true,
       "sdkVersionBegin": "3.0.0",
       "sdkVersionEnd": "15.255.255"

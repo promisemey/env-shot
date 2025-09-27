@@ -1,0 +1,38 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 小程序编译输出目录
+miniprogram_npm/
+dist/
+build/
+unpackage/
+
+# TypeScript 编译输出
+*.js
+*.d.ts
+*.js.map
+
+# 保留 src 下的 TS 类型文件
+!src/**/*.d.ts
+
+# 微信开发者工具生成的配置
+project.private.config.json
+project.config.private.json
+
+# IDE & 系统文件
+.idea/
+.vscode/*
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 其他可能的缓存
+.cache/
+.temp/
