@@ -1,0 +1,151 @@
+import { User, Community, EnvironmentProblem } from "../types/index";
+
+// 模拟用户数据
+export const mockUsers: User[] = [
+  {
+    id: "user-1",
+    phone: "13800138000",
+    name: "张三",
+    avatar: "https://picsum.photos/100/100?random=1",
+    role: "admin",
+    communityId: "community-1",
+    createTime: Date.now() - 86400000 * 30, // 30天前
+    updateTime: Date.now(),
+  },
+  {
+    id: "user-2",
+    phone: "13800138001",
+    name: "李四",
+    avatar: "https://picsum.photos/100/100?random=2",
+    role: "user",
+    communityId: "community-1",
+    createTime: Date.now() - 86400000 * 20,
+    updateTime: Date.now(),
+  },
+  {
+    id: "user-3",
+    phone: "13800138002",
+    name: "王五",
+    avatar: "https://picsum.photos/100/100?random=3",
+    role: "user",
+    communityId: "community-2",
+    createTime: Date.now() - 86400000 * 15,
+    updateTime: Date.now(),
+  },
+];
+
+// 模拟社区数据
+export const mockCommunities: Community[] = [
+  {
+    id: "community-1",
+    name: "阳光花园",
+    address: "北京市朝阳区阳光街123号",
+    description: "环境优美的现代化社区，绿化覆盖率高，配套设施完善。",
+    contactPhone: "010-12345678",
+    managerName: "张经理",
+    createTime: Date.now() - 86400000 * 365, // 1年前
+    updateTime: Date.now(),
+  },
+  {
+    id: "community-2",
+    name: "绿城小区",
+    address: "北京市海淀区绿城路456号",
+    description: "历史悠久的社区，居民素质高，社区文化丰富。",
+    contactPhone: "010-87654321",
+    managerName: "李经理",
+    createTime: Date.now() - 86400000 * 200,
+    updateTime: Date.now(),
+  },
+  {
+    id: "community-3",
+    name: "和谐家园",
+    address: "北京市西城区和谐大道789号",
+    description: "新建社区，设施现代化，智能化管理。",
+    contactPhone: "010-11223344",
+    managerName: "王经理",
+    createTime: Date.now() - 86400000 * 100,
+    updateTime: Date.now(),
+  },
+];
+
+// 模拟环境问题数据
+export const mockProblems: EnvironmentProblem[] = [
+  {
+    id: "problem-1",
+    title: "垃圾桶满溢",
+    description: "小区东门垃圾桶已经满了，垃圾散落在地面上，影响环境卫生。",
+    category: "waste",
+    severity: "medium",
+    status: "pending",
+    location: "东门垃圾投放点",
+    photos: [
+      "https://picsum.photos/400/300?random=10",
+      "https://picsum.photos/400/300?random=11",
+    ],
+    reporterId: "user-2",
+    communityId: "community-1",
+    createTime: Date.now() - 86400000 * 2, // 2天前
+    updateTime: Date.now() - 86400000 * 2,
+  },
+  {
+    id: "problem-2",
+    title: "绿化带杂草丛生",
+    description: "小区中央绿化带长期无人维护，杂草丛生，影响美观。",
+    category: "green",
+    severity: "low",
+    status: "processing",
+    location: "中央绿化带",
+    photos: ["https://picsum.photos/400/300?random=12"],
+    reporterId: "user-2",
+    communityId: "community-1",
+    createTime: Date.now() - 86400000 * 5,
+    updateTime: Date.now() - 86400000 * 1,
+  },
+  {
+    id: "problem-3",
+    title: "路灯损坏",
+    description: "小区北侧道路路灯损坏，夜间照明不足，存在安全隐患。",
+    category: "facility",
+    severity: "high",
+    status: "fixed",
+    location: "北侧道路",
+    photos: ["https://picsum.photos/400/300?random=13"],
+    fixPhotos: ["https://picsum.photos/400/300?random=14"],
+    fixDescription: "已更换新的LED路灯，照明效果良好。",
+    reporterId: "user-1",
+    communityId: "community-1",
+    createTime: Date.now() - 86400000 * 10,
+    updateTime: Date.now() - 86400000 * 3,
+  },
+  {
+    id: "problem-4",
+    title: "噪音污染",
+    description: "小区内施工噪音过大，影响居民正常休息。",
+    category: "noise",
+    severity: "high",
+    status: "pending",
+    location: "小区内部施工区域",
+    photos: ["https://picsum.photos/400/300?random=15"],
+    reporterId: "user-3",
+    communityId: "community-2",
+    createTime: Date.now() - 86400000 * 1,
+    updateTime: Date.now() - 86400000 * 1,
+  },
+  {
+    id: "problem-5",
+    title: "停车位不足",
+    description: "小区停车位严重不足，车辆乱停乱放现象严重。",
+    category: "facility",
+    severity: "medium",
+    status: "processing",
+    location: "小区停车场",
+    photos: [
+      "https://picsum.photos/400/300?random=16",
+      "https://picsum.photos/400/300?random=17",
+    ],
+    reporterId: "user-3",
+    communityId: "community-2",
+    createTime: Date.now() - 86400000 * 7,
+    updateTime: Date.now() - 86400000 * 2,
+  },
+];

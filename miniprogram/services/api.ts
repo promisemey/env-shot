@@ -5,9 +5,16 @@ import {
   ApiResponse,
   PaginatedResponse,
 } from "../types/index";
+import { config } from "../config/index";
+import {
+  mockUserApi,
+  mockCommunityApi,
+  mockProblemApi,
+  mockUploadApi,
+} from "../mocks/api";
 
 // API基础配置
-const API_BASE_URL = "https://your-api-domain.com/api"; // 替换为实际的API地址
+const API_BASE_URL = config.apiBaseUrl;
 
 // 通用请求方法
 const request = <T>(
@@ -45,6 +52,9 @@ export const userApi = {
     phone: string,
     code: string
   ): Promise<ApiResponse<{ user: User; token: string }>> => {
+    if (config.enableMock) {
+      return mockUserApi.loginByPhone(phone, code);
+    }
     return request("/user/login", {
       method: "POST",
       data: { phone, code },
@@ -53,6 +63,9 @@ export const userApi = {
 
   // 发送验证码
   sendSmsCode: (phone: string): Promise<ApiResponse> => {
+    if (config.enableMock) {
+      return mockUserApi.sendSmsCode(phone);
+    }
     return request("/user/send-sms", {
       method: "POST",
       data: { phone },
@@ -61,11 +74,17 @@ export const userApi = {
 
   // 获取用户信息
   getUserInfo: (): Promise<ApiResponse<User>> => {
+    if (config.enableMock) {
+      return mockUserApi.getUserInfo();
+    }
     return request("/user/info");
   },
 
   // 更新用户信息
   updateUserInfo: (userInfo: Partial<User>): Promise<ApiResponse<User>> => {
+    if (config.enableMock) {
+      return mockUserApi.updateUserInfo(userInfo);
+    }
     return request("/user/update", {
       method: "PUT",
       data: userInfo,
@@ -77,11 +96,17 @@ export const userApi = {
 export const communityApi = {
   // 获取所有社区列表
   getCommunities: (): Promise<ApiResponse<Community[]>> => {
+    if (config.enableMock) {
+      return mockCommunityApi.getCommunities();
+    }
     return request("/communities");
   },
 
   // 根据ID获取社区信息
   getCommunityById: (id: string): Promise<ApiResponse<Community>> => {
+    if (config.enableMock) {
+      return mockCommunityApi.getCommunityById(id);
+    }
     return request(`/communities/${id}`);
   },
 
@@ -89,6 +114,9 @@ export const communityApi = {
   createCommunity: (
     community: Omit<Community, "id" | "createTime" | "updateTime">
   ): Promise<ApiResponse<Community>> => {
+    if (config.enableMock) {
+      return mockCommunityApi.createCommunity(community);
+    }
     return request("/communities", {
       method: "POST",
       data: community,
@@ -108,6 +136,9 @@ export const problemApi = {
       pageSize?: number;
     } = {}
   ): Promise<PaginatedResponse<EnvironmentProblem>> => {
+    if (config.enableMock) {
+      return mockProblemApi.getProblems(params);
+    }
     return request("/problems", {
       data: params,
     });
@@ -115,6 +146,9 @@ export const problemApi = {
 
   // 根据ID获取问题详情
   getProblemById: (id: string): Promise<ApiResponse<EnvironmentProblem>> => {
+    if (config.enableMock) {
+      return mockProblemApi.getProblemById(id);
+    }
     return request(`/problems/${id}`);
   },
 
@@ -122,6 +156,9 @@ export const problemApi = {
   createProblem: (
     problem: Omit<EnvironmentProblem, "id" | "createTime" | "updateTime">
   ): Promise<ApiResponse<EnvironmentProblem>> => {
+    if (config.enableMock) {
+      return mockProblemApi.createProblem(problem);
+    }
     return request("/problems", {
       method: "POST",
       data: problem,
@@ -133,6 +170,9 @@ export const problemApi = {
     id: string,
     status: string
   ): Promise<ApiResponse<EnvironmentProblem>> => {
+    if (config.enableMock) {
+      return mockProblemApi.updateProblemStatus(id, status);
+    }
     return request(`/problems/${id}/status`, {
       method: "PUT",
       data: { status },
@@ -145,6 +185,9 @@ export const problemApi = {
     photos: string[],
     description?: string
   ): Promise<ApiResponse<EnvironmentProblem>> => {
+    if (config.enableMock) {
+      return mockProblemApi.uploadFixPhotos(id, photos, description);
+    }
     return request(`/problems/${id}/fix`, {
       method: "PUT",
       data: { photos, description },
@@ -156,6 +199,10 @@ export const problemApi = {
 export const uploadApi = {
   // 上传图片
   uploadImage: (filePath: string): Promise<ApiResponse<{ url: string }>> => {
+    if (config.enableMock) {
+      return mockUploadApi.uploadImage(filePath);
+    }
+
     return new Promise((resolve, reject) => {
       const token = wx.getStorageSync("token");
 
@@ -183,13 +230,19 @@ export const uploadApi = {
   uploadImages: async (
     filePaths: string[]
   ): Promise<ApiResponse<{ urls: string[] }>> => {
+    if (config.enableMock) {
+      return mockUploadApi.uploadImages(filePaths);
+    }
+
     try {
       const uploadPromises = filePaths.map((filePath) =>
         uploadApi.uploadImage(filePath)
       );
       const results = await Promise.all(uploadPromises);
 
-      const urls = results.map((result) => result.data?.url).filter(Boolean);
+      const urls = results
+        .map((result) => result.data?.url)
+        .filter((url): url is string => Boolean(url));
 
       return {
         success: true,
@@ -239,4 +292,3 @@ export const utils = {
     return severityMap[severity] || "#666666";
   },
 };
-
