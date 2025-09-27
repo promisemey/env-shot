@@ -1,3 +1,7 @@
 {
-  "navigationBarTitleText": "问题上报"
+  "navigationBarTitleText": "问题上报",
+  "usingComponents": {
+    "t-icon": "tdesign-miniprogram/icon/icon",
+    "t-button": "tdesign-miniprogram/button/button"
+  }
 }

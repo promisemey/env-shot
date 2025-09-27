@@ -126,7 +126,20 @@ const FIXED_COMMUNITIES: Community[] = [
 interface ProblemUploadPageData {
   communities: Community[];
   selectedCommunityIndex: number;
+  selectedCommunity: Community | null;
   selectedCommunityText: string;
+  description: string;
+  categories: Array<{
+    value: string;
+    label: string;
+    icon: string;
+  }>;
+  selectedCategory: string;
+  severityOptions: Array<{
+    value: string;
+    label: string;
+  }>;
+  selectedSeverity: string;
   photos: string[];
   location: {
     latitude: number;
@@ -135,17 +148,36 @@ interface ProblemUploadPageData {
   } | null;
   submitDisabled: boolean;
   submitBtnText: string;
+  submitting: boolean;
 }
 
 Page<ProblemUploadPageData, any>({
   data: {
     communities: FIXED_COMMUNITIES,
     selectedCommunityIndex: -1,
-    selectedCommunityText: "请选择社区",
+    selectedCommunity: null,
+    selectedCommunityText: "",
+    description: "",
+    categories: [
+      { value: "garbage", label: "垃圾处理", icon: "delete" },
+      { value: "water", label: "水质问题", icon: "circle" },
+      { value: "air", label: "空气质量", icon: "cloud" },
+      { value: "noise", label: "噪音污染", icon: "sound" },
+      { value: "green", label: "绿化问题", icon: "radish-filled" },
+      { value: "other", label: "其他问题", icon: "bulletpoint" },
+    ],
+    selectedCategory: "",
+    severityOptions: [
+      { value: "low", label: "轻微" },
+      { value: "medium", label: "中等" },
+      { value: "high", label: "严重" },
+    ],
+    selectedSeverity: "",
     photos: [],
     location: null,
     submitDisabled: false,
     submitBtnText: "提交问题",
+    submitting: false,
   },
 
   onLoad() {
@@ -158,7 +190,56 @@ Page<ProblemUploadPageData, any>({
     const community = this.data.communities[index];
     this.setData({
       selectedCommunityIndex: index,
+      selectedCommunity: community,
       selectedCommunityText: community.name,
+    });
+    this.checkSubmitStatus();
+  },
+
+  // 问题描述输入
+  onDescriptionInput(e: any) {
+    this.setData({
+      description: e.detail.value,
+    });
+    this.checkSubmitStatus();
+  },
+
+  // 选择问题分类
+  selectCategory(e: any) {
+    const value = e.currentTarget.dataset.value;
+    this.setData({
+      selectedCategory: value,
+    });
+    this.checkSubmitStatus();
+  },
+
+  // 选择严重程度
+  selectSeverity(e: any) {
+    const value = e.currentTarget.dataset.value;
+    this.setData({
+      selectedSeverity: value,
+    });
+    this.checkSubmitStatus();
+  },
+
+  // 检查提交状态
+  checkSubmitStatus() {
+    const {
+      selectedCommunity,
+      description,
+      selectedCategory,
+      selectedSeverity,
+      photos,
+    } = this.data;
+    const canSubmit =
+      selectedCommunity &&
+      description.trim().length > 0 &&
+      selectedCategory &&
+      selectedSeverity &&
+      photos.length > 0;
+
+    this.setData({
+      submitDisabled: !canSubmit,
     });
   },
 
@@ -176,6 +257,7 @@ Page<ProblemUploadPageData, any>({
         this.setData({
           photos: [...photos, ...tempFiles],
         });
+        this.checkSubmitStatus();
       },
       fail: (error) => {
         console.error("选择照片失败:", error);
@@ -205,6 +287,7 @@ Page<ProblemUploadPageData, any>({
 
     photos.splice(index, 1);
     this.setData({ photos });
+    this.checkSubmitStatus();
   },
 
   // 获取当前位置
@@ -268,12 +351,43 @@ Page<ProblemUploadPageData, any>({
 
   // 提交问题
   async submitProblem() {
-    const { communities, selectedCommunityIndex, photos, location } = this.data;
+    const {
+      selectedCommunity,
+      description,
+      selectedCategory,
+      selectedSeverity,
+      photos,
+      location,
+    } = this.data;
 
     // 验证必填字段
-    if (selectedCommunityIndex === -1) {
+    if (!selectedCommunity) {
       wx.showToast({
         title: "请选择社区",
+        icon: "none",
+      });
+      return;
+    }
+
+    if (!description.trim()) {
+      wx.showToast({
+        title: "请填写问题描述",
+        icon: "none",
+      });
+      return;
+    }
+
+    if (!selectedCategory) {
+      wx.showToast({
+        title: "请选择问题分类",
+        icon: "none",
+      });
+      return;
+    }
+
+    if (!selectedSeverity) {
+      wx.showToast({
+        title: "请选择严重程度",
         icon: "none",
       });
       return;
@@ -290,6 +404,7 @@ Page<ProblemUploadPageData, any>({
     try {
       this.setData({
         submitDisabled: true,
+        submitting: true,
         submitBtnText: "提交中...",
       });
 
@@ -308,15 +423,16 @@ Page<ProblemUploadPageData, any>({
 
       // 获取用户信息
       const userInfo = wx.getStorageSync("userInfo");
-      const selectedCommunity = communities[selectedCommunityIndex];
 
       // 构建问题数据
       const problemDataToSubmit = {
         communityId: selectedCommunity.id,
-        title: `${selectedCommunity.name}环境问题上报`,
-        description: "通过照片上报的环境问题",
-        category: "other" as const,
-        severity: "medium" as const,
+        title: `${selectedCommunity.name}${this.getCategoryText(
+          selectedCategory
+        )}`,
+        description: description.trim(),
+        category: selectedCategory as any,
+        severity: selectedSeverity as any,
         status: "pending" as const,
         photos: uploadRes.data.urls,
         reporterId: userInfo.id,
@@ -343,7 +459,11 @@ Page<ProblemUploadPageData, any>({
         // 清空表单
         this.setData({
           selectedCommunityIndex: -1,
-          selectedCommunityText: "请选择社区",
+          selectedCommunity: null,
+          selectedCommunityText: "",
+          description: "",
+          selectedCategory: "",
+          selectedSeverity: "",
           photos: [],
           location: null,
         });
@@ -367,8 +487,22 @@ Page<ProblemUploadPageData, any>({
     } finally {
       this.setData({
         submitDisabled: false,
+        submitting: false,
         submitBtnText: "提交问题",
       });
     }
+  },
+
+  // 获取分类文本
+  getCategoryText(category: string): string {
+    const categoryMap: { [key: string]: string } = {
+      garbage: "垃圾处理问题",
+      water: "水质问题",
+      air: "空气质量问题",
+      noise: "噪音污染问题",
+      green: "绿化问题",
+      other: "环境问题",
+    };
+    return categoryMap[category] || "环境问题";
   },
 });

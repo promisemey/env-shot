@@ -164,6 +164,7 @@ Page<UserPageData, any>({
     this.loadUserCommunity();
     this.loadUserStats();
     this.loadRecentActivities();
+    this.updateTabBar();
   },
 
   // 检查用户权限
@@ -355,5 +356,12 @@ Page<UserPageData, any>({
         }
       },
     });
+  },
+
+  // 更新自定义 tabBar
+  updateTabBar() {
+    if (typeof this.getTabBar === "function" && this.getTabBar()) {
+      this.getTabBar().updateTabBar();
+    }
   },
 });

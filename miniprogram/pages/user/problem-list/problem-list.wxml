@@ -54,10 +54,10 @@
         </view>
         <view class="problem-title-wrapper">
           <text class="problem-title">{{item.title}}</text>
-          <view class="problem-status-badge {{item.status}}">
-            <t-icon name="{{item.status === 'pending' ? 'time' : item.status === 'processing' ? 'loading' : item.status === 'fixed' ? 'check-circle' : 'close-circle'}}" size="20rpx" color="#ffffff"></t-icon>
-            <text class="status-text">{{item.statusText}}</text>
-          </view>
+        </view>
+        <view class="problem-status-badge {{item.status}}">
+          <t-icon name="{{item.status === 'pending' ? 'time' : item.status === 'processing' ? 'loading' : item.status === 'fixed' ? 'check-circle' : 'close-circle'}}" size="20rpx" color="#ffffff"></t-icon>
+          <text class="status-text">{{item.statusText}}</text>
         </view>
       </view>
       

@@ -203,6 +203,10 @@ Page<LoginPageData, any>({
       wx.setStorageSync("token", mockToken);
       wx.setStorageSync("userInfo", mockUser);
 
+      // 更新全局用户信息
+      const app = getApp<IAppOption>();
+      app.updateUserInfo(mockUser);
+
       wx.showToast({
         title: "登录成功",
         icon: "success",

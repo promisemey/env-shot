@@ -1,67 +1,185 @@
 <!--pages/admin/problem-upload/problem-upload.wxml-->
-<view class="upload-container">
-  <!-- 社区选择 -->
-  <view class="form-section">
-    <view class="form-item">
-      <text class="form-label">选择社区 *</text>
+<view class="page-container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <view class="header-content">
+      <view class="header-icon">
+        <t-icon name="camera" size="48rpx" color="#ffffff"></t-icon>
+      </view>
+      <view class="header-text">
+        <text class="header-title">问题上报</text>
+        <text class="header-desc">发现环境问题，及时上报处理</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 表单内容 -->
+  <view class="form-content">
+    <!-- 社区选择 -->
+    <view class="form-card">
+      <view class="card-header">
+        <view class="card-title">
+          <t-icon name="location" size="28rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="title">选择社区</text>
+          <text class="required">*</text>
+        </view>
+      </view>
+      
       <picker 
-        class="form-picker" 
+        class="community-picker" 
         range="{{communities}}" 
         range-key="name" 
         value="{{selectedCommunityIndex}}" 
         bindchange="onCommunityChange"
       >
-        <view class="picker-display">
-          <text class="picker-text">{{selectedCommunityText}}</text>
-          <text class="picker-arrow">></text>
+        <view class="picker-content">
+          <view class="picker-left">
+            <view class="picker-text {{!selectedCommunity ? 'placeholder' : ''}}">
+              {{selectedCommunityText || '请选择社区'}}
+            </view>
+          </view>
+          <t-icon name="chevron-right" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
         </view>
       </picker>
     </view>
-  </view>
 
-  <!-- 照片上传 -->
-  <view class="photo-section">
-    <view class="section-header">
-      <text class="section-title">问题照片 *</text>
-      <text class="photo-count">{{photos.length}}/9</text>
-    </view>
-    
-    <view class="photo-grid">
-      <view class="photo-item" wx:for="{{photos}}" wx:key="index">
-        <image src="{{item}}" mode="aspectFill" bindtap="previewPhoto" data-index="{{index}}"></image>
-        <view class="photo-delete" bindtap="deletePhoto" data-index="{{index}}">
-          <text class="delete-icon">×</text>
+    <!-- 问题描述 -->
+    <view class="form-card">
+      <view class="card-header">
+        <view class="card-title">
+          <t-icon name="edit" size="28rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="title">问题描述</text>
+          <text class="required">*</text>
         </view>
       </view>
       
-      <view class="photo-add" wx:if="{{photos.length < 9}}" bindtap="choosePhoto">
-        <text class="add-icon">+</text>
-        <text class="add-text">添加照片</text>
+      <textarea 
+        class="description-input"
+        placeholder="请详细描述发现的环境问题..."
+        value="{{description}}"
+        bindinput="onDescriptionInput"
+        maxlength="200"
+        show-confirm-bar="{{false}}"
+      ></textarea>
+      <view class="input-counter">{{description.length}}/200</view>
+    </view>
+
+    <!-- 问题分类 -->
+    <view class="form-card">
+      <view class="card-header">
+        <view class="card-title">
+          <t-icon name="folder" size="28rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="title">问题分类</text>
+          <text class="required">*</text>
+        </view>
+      </view>
+      
+      <view class="category-grid">
+        <view 
+          class="category-item {{selectedCategory === item.value ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="value"
+          bindtap="selectCategory"
+          data-value="{{item.value}}"
+        >
+          <t-icon name="{{item.icon}}" size="32rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="category-text">{{item.label}}</text>
+        </view>
       </view>
     </view>
-  </view>
 
-  <!-- 位置信息 -->
-  <view class="location-section">
-    <view class="section-header">
-      <text class="section-title">位置信息</text>
-      <text class="location-btn" bindtap="getCurrentLocation">获取位置</text>
+    <!-- 严重程度 -->
+    <view class="form-card">
+      <view class="card-header">
+        <view class="card-title">
+          <t-icon name="error" size="28rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="title">严重程度</text>
+          <text class="required">*</text>
+        </view>
+      </view>
+      
+      <view class="severity-options">
+        <view 
+          class="severity-item {{selectedSeverity === item.value ? 'active' : ''}}"
+          wx:for="{{severityOptions}}"
+          wx:key="value"
+          bindtap="selectSeverity"
+          data-value="{{item.value}}"
+        >
+          <view class="severity-dot {{item.value}}"></view>
+          <text class="severity-text">{{item.label}}</text>
+        </view>
+      </view>
     </view>
-    
-    <view class="location-info" wx:if="{{location}}">
-      <text class="location-address">{{location.address}}</text>
-      <text class="location-coords">经度: {{location.longitude}}, 纬度: {{location.latitude}}</text>
+
+    <!-- 照片上传 -->
+    <view class="form-card">
+      <view class="card-header">
+        <view class="card-title">
+          <t-icon name="camera" size="28rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="title">问题照片</text>
+          <text class="required">*</text>
+        </view>
+        <text class="photo-count">{{photos.length}}/9</text>
+      </view>
+      
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewPhoto" data-index="{{index}}"></image>
+          <view class="photo-delete" bindtap="deletePhoto" data-index="{{index}}">
+            <t-icon name="close" size="24rpx" color="#ffffff"></t-icon>
+          </view>
+        </view>
+        
+        <view class="photo-add" wx:if="{{photos.length < 9}}" bindtap="choosePhoto">
+          <t-icon name="add" size="48rpx" color="var(--td-gray-color-4)"></t-icon>
+          <text class="add-text">添加照片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 位置信息 -->
+    <view class="form-card">
+      <view class="card-header">
+        <view class="card-title">
+          <t-icon name="location" size="28rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="title">位置信息</text>
+        </view>
+        <view class="location-action" bindtap="getCurrentLocation">
+          <t-icon name="refresh" size="24rpx" color="var(--td-brand-color)"></t-icon>
+          <text class="action-text">获取位置</text>
+        </view>
+      </view>
+      
+      <view class="location-info" wx:if="{{location}}">
+        <view class="location-item">
+          <t-icon name="location" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
+          <text class="location-address">{{location.address}}</text>
+        </view>
+        <view class="location-item">
+          <t-icon name="pin" size="24rpx" color="var(--td-gray-color-4)"></t-icon>
+          <text class="location-coords">{{location.longitude}}, {{location.latitude}}</text>
+        </view>
+      </view>
+      
+      <view class="location-placeholder" wx:else>
+        <t-icon name="location" size="48rpx" color="var(--td-gray-color-4)"></t-icon>
+        <text class="placeholder-text">点击获取当前位置</text>
+      </view>
     </view>
   </view>
 
   <!-- 提交按钮 -->
   <view class="submit-section">
-    <button 
-      class="submit-btn {{submitDisabled ? 'disabled' : ''}}" 
-      bindtap="submitProblem"
+    <t-button 
+      theme="primary"
+      size="large"
+      block
       disabled="{{submitDisabled}}"
+      loading="{{submitting}}"
+      bindtap="submitProblem"
     >
       {{submitBtnText}}
-    </button>
+    </t-button>
   </view>
 </view>

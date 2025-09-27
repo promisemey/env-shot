@@ -32,6 +32,7 @@ Page<AdminPageData, any>({
     this.loadUserInfo();
     this.loadSelectedCommunity();
     this.loadTodayStats();
+    this.updateTabBar();
   },
 
   // 检查管理员权限
@@ -119,5 +120,12 @@ Page<AdminPageData, any>({
     wx.navigateTo({
       url,
     });
+  },
+
+  // 更新自定义 tabBar
+  updateTabBar() {
+    if (typeof this.getTabBar === "function" && this.getTabBar()) {
+      this.getTabBar().updateTabBar();
+    }
   },
 });

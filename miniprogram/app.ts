@@ -1,9 +1,13 @@
 // app.ts
 App<IAppOption>({
-  globalData: {},
+  globalData: {
+    userInfo: null,
+  },
   onLaunch() {
     // 检查登录状态
     this.checkLoginStatus();
+    // 初始化用户信息
+    this.initUserInfo();
   },
 
   // 检查登录状态
@@ -15,6 +19,20 @@ App<IAppOption>({
         url: "/pages/login/login",
       });
     }
+  },
+
+  // 初始化用户信息
+  initUserInfo() {
+    const userInfo = wx.getStorageSync("userInfo");
+    if (userInfo) {
+      this.globalData.userInfo = userInfo;
+    }
+  },
+
+  // 更新用户信息
+  updateUserInfo(userInfo: any) {
+    this.globalData.userInfo = userInfo;
+    wx.setStorageSync("userInfo", userInfo);
   },
 
   // 全局方法：显示加载中

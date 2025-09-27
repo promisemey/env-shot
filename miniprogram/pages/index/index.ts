@@ -37,6 +37,7 @@ Page<IndexPageData, any>({
     this.loadUserInfo();
     this.loadStats();
     this.loadRecentProblems();
+    this.updateTabBar();
   },
 
   // 检查登录状态
@@ -162,5 +163,12 @@ Page<IndexPageData, any>({
     wx.navigateTo({
       url: `/pages/user/problem-detail/problem-detail?id=${id}`,
     });
+  },
+
+  // 更新自定义 tabBar
+  updateTabBar() {
+    if (typeof this.getTabBar === "function" && this.getTabBar()) {
+      this.getTabBar().updateTabBar();
+    }
   },
 });

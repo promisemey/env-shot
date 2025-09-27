@@ -19,28 +19,22 @@
     "backgroundColor": "#f3f3f3"
   },
   "tabBar": {
+    "custom": true,
     "color": "#666666",
     "selectedColor": "#0052d9",
     "backgroundColor": "#ffffff",
-    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/index/index",
-        "text": "首页",
-        "iconPath": "assets/tabbar/home.png",
-        "selectedIconPath": "assets/tabbar/home-active.png"
+        "text": "首页"
       },
       {
         "pagePath": "pages/admin/admin",
-        "text": "管理",
-        "iconPath": "assets/tabbar/admin.png",
-        "selectedIconPath": "assets/tabbar/admin-active.png"
+        "text": "管理"
       },
       {
         "pagePath": "pages/user/user",
-        "text": "我的",
-        "iconPath": "assets/tabbar/user.png",
-        "selectedIconPath": "assets/tabbar/user-active.png"
+        "text": "我的"
       }
     ]
   },

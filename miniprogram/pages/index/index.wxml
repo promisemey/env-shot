@@ -27,13 +27,7 @@
     <view class="menu-grid">
       <!-- 管理员功能 -->
       <block wx:if="{{userInfo.role === 'admin'}}">
-        <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/community-select/community-select">
-          <view class="menu-icon">
-            <t-icon name="location" size="48rpx" color="#0052d9"></t-icon>
-          </view>
-          <text class="menu-text">选择社区</text>
-          <text class="menu-desc">管理社区信息</text>
-        </view>
+
         
         <view class="menu-item" bindtap="navigateTo" data-url="/pages/admin/problem-upload/problem-upload">
           <view class="menu-icon">
