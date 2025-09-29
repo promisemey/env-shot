@@ -1,9 +1,14 @@
 // app.ts
+import { FontLoader } from "./utils/font-loader";
+
 App<IAppOption>({
   globalData: {
     userInfo: null,
   },
   onLaunch() {
+    // 初始化字体加载器
+    FontLoader.init();
+
     // 检查登录状态
     this.checkLoginStatus();
     // 初始化用户信息

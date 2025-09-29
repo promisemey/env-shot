@@ -61,6 +61,24 @@ export const userApi = {
     });
   },
 
+  // 微信登录
+  loginByWechat: (loginData: {
+    code: string;
+    userInfo: any;
+    rawData: string;
+    signature: string;
+    encryptedData: string;
+    iv: string;
+  }): Promise<ApiResponse<{ user: User; token: string }>> => {
+    if (config.enableMock) {
+      return mockUserApi.loginByWechat(loginData);
+    }
+    return request("/user/wechat-login", {
+      method: "POST",
+      data: loginData,
+    });
+  },
+
   // 发送验证码
   sendSmsCode: (phone: string): Promise<ApiResponse> => {
     if (config.enableMock) {

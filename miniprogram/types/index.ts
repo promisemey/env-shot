@@ -1,3 +1,11 @@
+// 微信用户信息
+export interface WechatUserInfo {
+  openid: string;
+  unionid?: string;
+  nickname?: string;
+  avatarUrl?: string;
+}
+
 // 用户类型
 export interface User {
   id: string;
@@ -6,6 +14,7 @@ export interface User {
   role: "admin" | "user"; // 管理员或普通用户
   communityId?: string; // 用户所属社区ID
   avatar?: string;
+  wechatInfo?: WechatUserInfo; // 微信用户信息
   createTime: number;
   updateTime: number;
 }
@@ -90,4 +99,3 @@ export interface PaginationParams {
 export interface PaginatedResponse<T> extends ApiResponse<T[]> {
   pagination: PaginationParams;
 }
-

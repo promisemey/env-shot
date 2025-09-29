@@ -1,0 +1,43 @@
+/* 字体配置文件 */
+
+/* TDesign 图标字体本地化配置 */
+/* 如果需要本地化字体，请下载字体文件到 /assets/fonts/ 目录并取消注释以下代码 */
+
+/*
+@font-face {
+  font-family: 't';
+  font-weight: normal;
+  font-style: normal;
+  src: url('/assets/fonts/t.woff2') format('woff2'),
+       url('/assets/fonts/t.woff') format('woff'),
+       url('/assets/fonts/t.ttf') format('truetype');
+}
+*/
+
+/* 字体加载失败时的降级处理 */
+.t-icon {
+  font-family: 't', 'iconfont', sans-serif;
+  
+  /* 如果字体加载失败，隐藏图标避免显示乱码 */
+  &::before {
+    font-family: 't', 'iconfont', sans-serif;
+  }
+}
+
+/* 为TDesign组件提供字体降级 */
+[class*="t-icon-"] {
+  font-family: 't', 'iconfont', sans-serif;
+}
+
+/* 字体加载错误时的样式处理 */
+@media screen {
+  .t-icon {
+    /* 确保图标有合适的尺寸 */
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+  }
+}

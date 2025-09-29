@@ -56,6 +56,57 @@ export const mockUserApi = {
     };
   },
 
+  // 微信登录
+  loginByWechat: async (loginData: {
+    code: string;
+    userInfo: any;
+    rawData: string;
+    signature: string;
+    encryptedData: string;
+    iv: string;
+  }): Promise<ApiResponse<{ user: User; token: string }>> => {
+    await delay();
+
+    console.log("Mock微信登录数据:", loginData);
+
+    // 模拟微信登录逻辑
+    if (loginData.code && loginData.userInfo) {
+      // 使用真实的微信用户信息
+      const wechatUserInfo = loginData.userInfo;
+
+      const mockWechatUser: User = {
+        id: `wechat_user_${Date.now()}`,
+        phone: "", // 微信登录通常没有手机号
+        name: wechatUserInfo.nickName || "微信用户",
+        role: "user", // 默认为普通用户
+        communityId: "1", // 默认分配到社区1
+        avatar: wechatUserInfo.avatarUrl,
+        createTime: Date.now(),
+        updateTime: Date.now(),
+        wechatInfo: {
+          openid: `openid_${Date.now()}`, // 实际应该从后端获取
+          unionid: `unionid_${Date.now()}`, // 实际应该从后端获取
+          nickname: wechatUserInfo.nickName,
+          avatarUrl: wechatUserInfo.avatarUrl,
+        },
+      };
+
+      return {
+        success: true,
+        data: {
+          user: mockWechatUser,
+          token: "wechat-token-" + Date.now(),
+        },
+        message: "微信登录成功",
+      };
+    }
+
+    return {
+      success: false,
+      message: "微信登录失败，缺少必要参数",
+    };
+  },
+
   // 更新用户信息
   updateUserInfo: async (
     userInfo: Partial<User>

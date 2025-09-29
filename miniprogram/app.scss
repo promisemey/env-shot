@@ -1,4 +1,8 @@
 /**app.wxss**/
+
+/* 引入字体配置 */
+@import './styles/fonts.scss';
+
 .container {
   height: 100%;
   display: flex;

@@ -11,6 +11,8 @@ interface LoginPageData {
   loginBtnText: string;
   loginBtnDisabled: boolean;
   countdown: number;
+  wechatLoginText: string;
+  wechatLoginDisabled: boolean;
 }
 
 Page<LoginPageData, any>({
@@ -22,6 +24,8 @@ Page<LoginPageData, any>({
     loginBtnText: "登录",
     loginBtnDisabled: false,
     countdown: 0,
+    wechatLoginText: "微信一键登录",
+    wechatLoginDisabled: false,
   },
 
   onLoad() {
@@ -285,6 +289,124 @@ Page<LoginPageData, any>({
       title: "服务条款",
       content: "使用本服务即表示您同意相关服务条款。",
       showCancel: false,
+    });
+  },
+
+  // 微信授权登录回调
+  async onGetUserInfo(e: any) {
+    console.log("微信授权回调:", e);
+
+    if (e.detail.errMsg === "getUserInfo:ok") {
+      // 用户同意授权
+      await this.handleWechatLogin(e.detail);
+    } else {
+      // 用户拒绝授权
+      wx.showToast({
+        title: "需要授权才能登录",
+        icon: "none",
+      });
+    }
+  },
+
+  // 处理微信登录
+  async handleWechatLogin(userInfo: any) {
+    try {
+      this.setData({
+        wechatLoginDisabled: true,
+        wechatLoginText: "登录中...",
+      });
+
+      // 1. 获取微信登录code
+      const loginCode = await this.getWechatLoginCode();
+
+      // 2. 准备登录数据
+      const loginData = {
+        code: loginCode.code,
+        userInfo: userInfo.userInfo,
+        rawData: userInfo.rawData,
+        signature: userInfo.signature,
+        encryptedData: userInfo.encryptedData,
+        iv: userInfo.iv,
+      };
+
+      console.log("微信登录数据:", loginData);
+
+      // 3. 调用后端微信登录接口
+      const res = await userApi.loginByWechat(loginData);
+
+      if (res.success && res.data) {
+        // 保存用户信息和token
+        wx.setStorageSync("token", res.data.token);
+        wx.setStorageSync("userInfo", res.data.user);
+
+        // 更新全局用户信息
+        const app = getApp();
+        if (app.globalData) {
+          app.globalData.userInfo = res.data.user;
+        }
+
+        wx.showToast({
+          title: "登录成功",
+          icon: "success",
+        });
+
+        // 根据用户角色跳转到对应页面
+        setTimeout(() => {
+          const defaultPage = AuthManager.getDefaultPageForRole();
+          if (defaultPage.includes("admin") || defaultPage.includes("user")) {
+            wx.switchTab({
+              url: defaultPage,
+            });
+          } else {
+            wx.switchTab({
+              url: "/pages/index/index",
+            });
+          }
+        }, 1500);
+      } else {
+        throw new Error(res.message || "微信登录失败");
+      }
+    } catch (error) {
+      console.error("微信登录失败:", error);
+
+      let errorMessage = "微信登录失败";
+      if (error instanceof Error) {
+        if (error.message.includes("网络")) {
+          errorMessage = "网络连接失败，请重试";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
+      wx.showToast({
+        title: errorMessage,
+        icon: "none",
+        duration: 2000,
+      });
+    } finally {
+      this.setData({
+        wechatLoginDisabled: false,
+        wechatLoginText: "微信一键登录",
+      });
+    }
+  },
+
+  // 获取微信登录code
+  getWechatLoginCode(): Promise<{ code: string }> {
+    return new Promise((resolve, reject) => {
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            resolve({ code: res.code });
+          } else {
+            reject(new Error("获取微信登录凭证失败"));
+          }
+        },
+        fail: (err) => {
+          console.error("微信登录失败:", err);
+          reject(new Error("获取登录凭证失败"));
+        },
+      });
     });
   },
 });

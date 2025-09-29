@@ -61,6 +61,26 @@
         </view>
       </view>
       <t-button theme="primary" size="large" bindtap="login" class="form-actions" >登录</t-button>
+      
+      <!-- 微信一键登录 -->
+      <view class="wechat-login-section">
+        <view class="divider">
+          <view class="divider-line"></view>
+          <text class="divider-text">或</text>
+          <view class="divider-line"></view>
+        </view>
+        <button 
+          class="wechat-login-btn"
+          open-type="getUserInfo"
+          bindgetuserinfo="onGetUserInfo"
+          disabled="{{wechatLoginDisabled}}"
+        >
+          <view class="wechat-btn-content">
+            <t-icon name="logo-wechat" size="32rpx" color="#07c160"></t-icon>
+            <text class="wechat-btn-text">{{wechatLoginText}}</text>
+          </view>
+        </button>
+      </view>
     </view>
   </view>
 
