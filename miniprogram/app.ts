@@ -1,10 +1,20 @@
 // app.ts
 import { FontLoader } from "./utils/font-loader";
 
-App<IAppOption>({
-  globalData: {
-    userInfo: null,
-  },
+App<
+  IAppOption & {
+    checkLoginStatus: () => void;
+    initUserInfo: () => void;
+    updateUserInfo: (userinfo: WechatMiniprogram.UserInfo) => void;
+    showLoading: (title?: string) => void;
+    hideLoading: () => void;
+    showToast: (
+      title: string,
+      icon?: "success" | "error" | "loading" | "none"
+    ) => void;
+  }
+>({
+  globalData: {},
   onLaunch() {
     // 初始化字体加载器
     FontLoader.init();
@@ -35,7 +45,7 @@ App<IAppOption>({
   },
 
   // 更新用户信息
-  updateUserInfo(userInfo: any) {
+  updateUserInfo(userInfo: WechatMiniprogram.UserInfo) {
     this.globalData.userInfo = userInfo;
     wx.setStorageSync("userInfo", userInfo);
   },

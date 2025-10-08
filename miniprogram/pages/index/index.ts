@@ -63,23 +63,23 @@ Page<IndexPageData, any>({
   async loadStats() {
     try {
       const userInfo = wx.getStorageSync("userInfo");
-      const params: any = {};
+      if (!userInfo) return;
 
-      if (userInfo.role === "user" && userInfo.communityId) {
-        params.communityId = userInfo.communityId;
+      let res;
+      if (userInfo.role === 0 && userInfo.community_id) {
+        // 普通用户只能看自己社区的数据
+        res = await problemApi.getProblemByCommunityId(userInfo.community_id);
+      } else if (userInfo.role === 1) {
+        res = await problemApi.getProblemByCommunityId(
+          userInfo.community_id || "b7a6a549737044838361693fd65013db"
+        );
       }
 
-      const res = await problemApi.getProblems(params);
-
-      if (res.success && res.data) {
+      if (res && res.code === 200 && res.data) {
         const problems = res.data;
         const totalProblems = problems.length;
-        const pendingProblems = problems.filter(
-          (p) => p.status === "pending"
-        ).length;
-        const fixedProblems = problems.filter(
-          (p) => p.status === "fixed"
-        ).length;
+        const pendingProblems = problems.filter((p) => p.status === 0).length;
+        const fixedProblems = problems.filter((p) => p.status === 1).length;
         const fixRate =
           totalProblems > 0
             ? Math.round((fixedProblems / totalProblems) * 100)
@@ -103,22 +103,24 @@ Page<IndexPageData, any>({
   async loadRecentProblems() {
     try {
       const userInfo = wx.getStorageSync("userInfo");
-      const params: any = {
-        page: 1,
-        pageSize: 5,
-      };
+      if (!userInfo) return;
 
-      if (userInfo.role === "user" && userInfo.communityId) {
-        params.communityId = userInfo.communityId;
+      let res;
+      if (userInfo.role === 0 && userInfo.community_id) {
+        // 普通用户只能看自己社区的数据
+        res = await problemApi.getProblemByCommunityId(userInfo.community_id);
+      } else if (userInfo.role === 1) {
+        // 管理员可以看所有数据，这里简化处理
+        res = await problemApi.getProblemByCommunityId(
+          userInfo.community_id || "b7a6a549737044838361693fd65013db"
+        );
       }
 
-      const res = await problemApi.getProblems(params);
-
-      if (res.success && res.data) {
-        const recentProblems = res.data.map((problem) => ({
+      if (res && res.code === 200 && res.data) {
+        const recentProblems = res.data.slice(0, 5).map((problem) => ({
           ...problem,
-          statusText: this.getStatusText(problem.status),
-          createTime: utils.formatTime(problem.createTime),
+          statusText: utils.getStatusText(problem.status),
+          createTime: utils.formatTime(problem.created_at),
         }));
 
         this.setData({ recentProblems });
@@ -128,29 +130,18 @@ Page<IndexPageData, any>({
     }
   },
 
-  // 获取状态文本
-  getStatusText(status: string): string {
-    const statusMap: { [key: string]: string } = {
-      pending: "待处理",
-      processing: "处理中",
-      fixed: "已整改",
-      closed: "已关闭",
-    };
-    return statusMap[status] || "未知";
-  },
-
-  // 页面导航 - 加入权限检查
-  navigateTo(e: any) {
+  // 页面导航
+  navigateTo(e: WechatMiniprogram.BaseEvent) {
     const url = e.currentTarget.dataset.url;
 
-    // 检查页面访问权限
-    if (!AuthManager.canAccessPage(url)) {
-      wx.showToast({
-        title: "无权限访问此页面",
-        icon: "none",
-      });
-      return;
-    }
+    // // 检查页面访问权限
+    // if (!AuthManager.canAccessPage(url)) {
+    //   wx.showToast({
+    //     title: "无权限访问此页面",
+    //     icon: "none",
+    //   });
+    //   return;
+    // }
 
     wx.navigateTo({
       url,
@@ -168,7 +159,9 @@ Page<IndexPageData, any>({
   // 更新自定义 tabBar
   updateTabBar() {
     if (typeof this.getTabBar === "function" && this.getTabBar()) {
-      this.getTabBar().updateTabBar();
+      this.getTabBar().setData({
+        selected: 0,
+      });
     }
   },
 });

@@ -76,9 +76,9 @@ Page<PermissionDemoPageData, any>({
       {
         name: "上传问题",
         description: "管理员可以上传发现的环境问题",
-        permission: Permission.ADMIN_UPLOAD_PROBLEM,
+        permission: Permission.USER_UPLOAD_PROBLEM,
         hasPermission: AuthManager.hasPermission(
-          Permission.ADMIN_UPLOAD_PROBLEM
+          Permission.USER_UPLOAD_PROBLEM
         ),
       },
       {

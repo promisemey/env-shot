@@ -1,11 +1,6 @@
 // pages/user/problem-list/problem-list.ts
 import { problemApi, utils } from "../../../services/api";
-import {
-  EnvironmentProblem,
-  PROBLEM_CATEGORIES,
-  SEVERITY_LEVELS,
-  PROBLEM_STATUS,
-} from "../../../types/index";
+import { EnvironmentProblem, PROBLEM_STATUS } from "../../../types/index";
 
 interface ProblemListPageData {
   problems: (EnvironmentProblem & {
@@ -21,7 +16,7 @@ interface ProblemListPageData {
   pageSize: number;
 }
 
-Page<ProblemListPageData>({
+Page<ProblemListPageData, any>({
   data: {
     problems: [],
     currentFilter: "all",
@@ -65,15 +60,15 @@ Page<ProblemListPageData>({
         params.status = this.data.currentFilter;
       }
 
-      const res = await problemApi.getProblems(params);
+      const res = await problemApi.getProblemByCommunityId(params);
 
-      if (res.success && res.data) {
+      if (res.data) {
         const newProblems = res.data.map((problem) => ({
           ...problem,
           statusText: this.getStatusText(problem.status),
-          categoryText: this.getCategoryText(problem.category),
-          severityText: this.getSeverityText(problem.severity),
-          createTime: utils.formatTime(problem.createTime),
+          categoryText: this.getCategoryText(problem.status),
+          severityText: this.getSeverityText(problem.status),
+          createTime: problem.created_at,
         }));
 
         const problems = reset
@@ -176,4 +171,3 @@ Page<ProblemListPageData>({
     });
   },
 });
-

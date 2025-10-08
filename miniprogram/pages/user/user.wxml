@@ -7,7 +7,7 @@
         <view class="user-avatar-wrapper">
           <t-avatar 
             size="120rpx" 
-            image="{{userInfo.avatar || '/images/default-avatar.png'}}"
+            image="{{userInfo.avatar || '/assets/images/default.png'}}"
             class="user-avatar"
           ></t-avatar>
           <view class="avatar-badge">

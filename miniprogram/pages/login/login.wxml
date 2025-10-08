@@ -45,21 +45,6 @@
         </view>
       </view>
       
-      <!-- 登录说明 -->
-      <view class="login-tips">
-        <view class="tip-item">
-          <t-icon name="user" size="24rpx" color="#52c41a"></t-icon>
-          <text class="tip-text">管理员：138开头的手机号</text>
-        </view>
-        <view class="tip-item">
-          <t-icon name="home" size="24rpx" color="#1890ff"></t-icon>
-          <text class="tip-text">普通用户：其他手机号</text>
-        </view>
-        <view class="tip-item">
-          <t-icon name="info-circle" size="24rpx" color="#faad14"></t-icon>
-          <text class="tip-text">验证码：任意6位数字</text>
-        </view>
-      </view>
       <t-button theme="primary" size="large" bindtap="login" class="form-actions" >登录</t-button>
       
       <!-- 微信一键登录 -->

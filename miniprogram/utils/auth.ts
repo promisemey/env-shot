@@ -1,20 +1,19 @@
-// utils/auth.ts - 权限管理工具
 import { User } from "../types/index";
 
 export enum UserRole {
-  ADMIN = "admin",
-  USER = "user",
+  USER = 0,
+  ADMIN = 1,
 }
 
 export enum Permission {
   // 管理员权限
   ADMIN_VIEW_ALL = "admin:view_all", // 查看所有数据
-  ADMIN_UPLOAD_PROBLEM = "admin:upload_problem", // 上传问题
   ADMIN_MANAGE_PROBLEM = "admin:manage_problem", // 管理问题状态
   ADMIN_SELECT_COMMUNITY = "admin:select_community", // 选择社区
   ADMIN_MONITOR = "admin:monitor", // 监控面板
 
   // 用户权限
+  USER_UPLOAD_PROBLEM = "user:upload_problem", // 上传问题
   USER_VIEW_OWN = "user:view_own", // 查看自己社区的数据
   USER_UPLOAD_FIX = "user:upload_fix", // 上传整改照片
   USER_VIEW_PROBLEM_LIST = "user:view_problem_list", // 查看问题列表
@@ -25,12 +24,12 @@ export enum Permission {
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
   [UserRole.ADMIN]: [
     Permission.ADMIN_VIEW_ALL,
-    Permission.ADMIN_UPLOAD_PROBLEM,
     Permission.ADMIN_MANAGE_PROBLEM,
     Permission.ADMIN_SELECT_COMMUNITY,
     Permission.ADMIN_MONITOR,
   ],
   [UserRole.USER]: [
+    Permission.USER_UPLOAD_PROBLEM,
     Permission.USER_VIEW_OWN,
     Permission.USER_UPLOAD_FIX,
     Permission.USER_VIEW_PROBLEM_LIST,
@@ -45,12 +44,12 @@ export const PAGE_PERMISSIONS: Record<string, Permission[]> = {
   "/pages/admin/community-select/community-select": [
     Permission.ADMIN_SELECT_COMMUNITY,
   ],
-  "/pages/admin/problem-upload/problem-upload": [
-    Permission.ADMIN_UPLOAD_PROBLEM,
-  ],
   "/pages/admin/problem-monitor/problem-monitor": [Permission.ADMIN_MONITOR],
 
   // 用户页面
+  "/pages/admin/problem-upload/problem-upload": [
+    Permission.USER_UPLOAD_PROBLEM,
+  ],
   "/pages/user/user": [Permission.USER_VIEW_OWN],
   "/pages/user/problem-list/problem-list": [Permission.USER_VIEW_PROBLEM_LIST],
   "/pages/user/problem-detail/problem-detail": [
@@ -73,6 +72,7 @@ export class AuthManager {
   static getCurrentUser(): User | null {
     try {
       const userInfo = wx.getStorageSync("userInfo");
+      console.log("🚀 ~ AuthManager ~ getCurrentUser ~ userInfo:", userInfo);
       return userInfo || null;
     } catch (error) {
       console.error("获取用户信息失败:", error);
@@ -94,7 +94,7 @@ export class AuthManager {
    */
   static getUserRole(): UserRole | null {
     const user = this.getCurrentUser();
-    return (user?.role as UserRole) || null;
+    return user?.role || null;
   }
 
   /**

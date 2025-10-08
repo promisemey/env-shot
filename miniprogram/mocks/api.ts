@@ -1,11 +1,16 @@
 import {
   User,
   Community,
+  ProblemType,
   EnvironmentProblem,
   ApiResponse,
-  PaginatedResponse,
 } from "../types/index";
-import { mockUsers, mockCommunities, mockProblems } from "./data";
+import {
+  mockUsers,
+  mockCommunities,
+  mockProblems,
+  mockProblemTypes,
+} from "./data";
 
 // 模拟延迟
 const delay = (ms: number = 500) =>
@@ -16,107 +21,149 @@ export const mockUserApi = {
   // 手机号登录
   loginByPhone: async (
     phone: string,
-    code: string
+    code?: string
   ): Promise<ApiResponse<{ user: User; token: string }>> => {
     await delay();
 
-    // 简单验证逻辑
-    if (code === "123456") {
-      const user = mockUsers.find((u) => u.phone === phone) || mockUsers[0];
-      return {
-        success: true,
-        data: {
-          user,
-          token: "mock-token-" + Date.now(),
-        },
-      };
-    }
-
+    const user = mockUsers.find((u) => u.phone === phone) || mockUsers[0];
     return {
-      success: false,
-      message: "验证码错误",
-    };
-  },
-
-  // 发送验证码
-  sendSmsCode: async (phone: string): Promise<ApiResponse> => {
-    await delay(200);
-    return {
-      success: true,
-      message: "验证码已发送",
-    };
-  },
-
-  // 获取用户信息
-  getUserInfo: async (): Promise<ApiResponse<User>> => {
-    await delay();
-    return {
-      success: true,
-      data: mockUsers[0],
+      code: 200,
+      message: "登录成功",
+      data: {
+        user,
+        token: "mock-token-" + Date.now(),
+      },
     };
   },
 
   // 微信登录
   loginByWechat: async (loginData: {
     code: string;
-    userInfo: any;
-    rawData: string;
-    signature: string;
-    encryptedData: string;
-    iv: string;
+    nickname?: string;
+    avatar?: string;
   }): Promise<ApiResponse<{ user: User; token: string }>> => {
     await delay();
 
-    console.log("Mock微信登录数据:", loginData);
+    const mockWechatUser: User = {
+      user_id: `wechat_user_${Date.now()}`,
+      phone: "",
+      openid: `openid_${Date.now()}`,
+      nickname: loginData.nickname || "微信用户",
+      avatar: loginData.avatar || "https://dummyimage.com/200x200",
+      role: 0,
+      community_id: mockCommunities[0].community_id,
+      created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+    };
 
-    // 模拟微信登录逻辑
-    if (loginData.code && loginData.userInfo) {
-      // 使用真实的微信用户信息
-      const wechatUserInfo = loginData.userInfo;
+    return {
+      code: 200,
+      message: "微信登录成功",
+      data: {
+        user: mockWechatUser,
+        token: "wechat-token-" + Date.now(),
+      },
+    };
+  },
 
-      const mockWechatUser: User = {
-        id: `wechat_user_${Date.now()}`,
-        phone: "", // 微信登录通常没有手机号
-        name: wechatUserInfo.nickName || "微信用户",
-        role: "user", // 默认为普通用户
-        communityId: "1", // 默认分配到社区1
-        avatar: wechatUserInfo.avatarUrl,
-        createTime: Date.now(),
-        updateTime: Date.now(),
-        wechatInfo: {
-          openid: `openid_${Date.now()}`, // 实际应该从后端获取
-          unionid: `unionid_${Date.now()}`, // 实际应该从后端获取
-          nickname: wechatUserInfo.nickName,
-          avatarUrl: wechatUserInfo.avatarUrl,
-        },
-      };
+  // 获取用户信息
+  getUserInfoById: async (user_id: string): Promise<ApiResponse<User>> => {
+    await delay();
+    const user = mockUsers.find((u) => u.user_id === user_id);
 
+    if (user) {
       return {
-        success: true,
-        data: {
-          user: mockWechatUser,
-          token: "wechat-token-" + Date.now(),
-        },
-        message: "微信登录成功",
+        code: 200,
+        message: "获取成功",
+        data: user,
       };
     }
 
     return {
-      success: false,
-      message: "微信登录失败，缺少必要参数",
+      code: 404,
+      message: "用户不存在",
     };
   },
 
-  // 更新用户信息
-  updateUserInfo: async (
-    userInfo: Partial<User>
-  ): Promise<ApiResponse<User>> => {
+  // 获取指定社区所有用户
+  getUserByCommunityId: async (
+    community_id?: string
+  ): Promise<ApiResponse<User[]>> => {
     await delay();
-    const updatedUser = { ...mockUsers[0], ...userInfo };
+
+    let filteredUsers = mockUsers;
+    if (community_id) {
+      filteredUsers = mockUsers.filter((u) => u.community_id === community_id);
+    }
 
     return {
-      success: true,
-      data: updatedUser,
+      code: 200,
+      message: "获取成功",
+      data: filteredUsers,
+    };
+  },
+
+  // 设置用户所属社区
+  setUserCommunityById: async (
+    user_id: string,
+    community_id: string
+  ): Promise<ApiResponse> => {
+    await delay();
+
+    const userIndex = mockUsers.findIndex((u) => u.user_id === user_id);
+    if (userIndex !== -1) {
+      mockUsers[userIndex].community_id = community_id;
+      return {
+        code: 200,
+        message: "设置成功",
+      };
+    }
+
+    return {
+      code: 404,
+      message: "用户不存在",
+    };
+  },
+
+  // 删除用户
+  deleteUserById: async (user_id: string): Promise<ApiResponse<User>> => {
+    await delay();
+
+    const userIndex = mockUsers.findIndex((u) => u.user_id === user_id);
+    if (userIndex !== -1) {
+      const deletedUser = mockUsers.splice(userIndex, 1)[0];
+      return {
+        code: 200,
+        message: "删除成功",
+        data: deletedUser,
+      };
+    }
+
+    return {
+      code: 404,
+      message: "用户不存在",
+    };
+  },
+
+  // 更新用户角色
+  updateUserRoleById: async (
+    user_id: string,
+    role: number
+  ): Promise<ApiResponse<User>> => {
+    await delay();
+
+    const userIndex = mockUsers.findIndex((u) => u.user_id === user_id);
+    if (userIndex !== -1) {
+      mockUsers[userIndex].role = role;
+      return {
+        code: 200,
+        message: "操作成功",
+        data: mockUsers[userIndex],
+      };
+    }
+
+    return {
+      code: 404,
+      message: "用户不存在",
     };
   },
 };
@@ -124,245 +171,283 @@ export const mockUserApi = {
 // 模拟社区相关API
 export const mockCommunityApi = {
   // 获取所有社区列表
-  getCommunities: async (): Promise<ApiResponse<Community[]>> => {
+  getAllCommunity: async (): Promise<ApiResponse<Community[]>> => {
     await delay();
     return {
-      success: true,
+      code: 200,
+      message: "获取成功",
       data: mockCommunities,
-    };
-  },
-
-  // 根据ID获取社区信息
-  getCommunityById: async (id: string): Promise<ApiResponse<Community>> => {
-    await delay();
-    const community = mockCommunities.find((c) => c.id === id);
-
-    if (community) {
-      return {
-        success: true,
-        data: community,
-      };
-    }
-
-    return {
-      success: false,
-      message: "社区不存在",
     };
   },
 
   // 创建社区（管理员功能）
   createCommunity: async (
-    community: Omit<Community, "id" | "createTime" | "updateTime">
+    community_text: string
   ): Promise<ApiResponse<Community>> => {
     await delay();
 
     const newCommunity: Community = {
-      ...community,
-      id: "community-" + Date.now(),
-      createTime: Date.now(),
-      updateTime: Date.now(),
+      community_id: "community-" + Date.now(),
+      community_text,
     };
 
     mockCommunities.push(newCommunity);
 
     return {
-      success: true,
+      code: 200,
+      message: "创建成功",
       data: newCommunity,
+    };
+  },
+
+  // 更新社区名称
+  updateCommunityById: async (
+    community_id: string,
+    community_text: string
+  ): Promise<ApiResponse<{ current_community: Community }>> => {
+    await delay();
+
+    const communityIndex = mockCommunities.findIndex(
+      (c) => c.community_id === community_id
+    );
+    if (communityIndex !== -1) {
+      mockCommunities[communityIndex].community_text = community_text;
+      return {
+        code: 200,
+        message: "修改成功",
+        data: {
+          current_community: mockCommunities[communityIndex],
+        },
+      };
+    }
+
+    return {
+      code: 404,
+      message: "社区不存在",
+    };
+  },
+
+  // 删除社区
+  deleteCommunityById: async (
+    community_id: string
+  ): Promise<ApiResponse<{ community_id: string }>> => {
+    await delay();
+
+    const communityIndex = mockCommunities.findIndex(
+      (c) => c.community_id === community_id
+    );
+    if (communityIndex !== -1) {
+      mockCommunities.splice(communityIndex, 1);
+      return {
+        code: 200,
+        message: "删除成功",
+        data: { community_id },
+      };
+    }
+
+    return {
+      code: 404,
+      message: "社区不存在",
+    };
+  },
+};
+
+// 模拟问题类型相关API
+export const mockTypeApi = {
+  // 获取所有问题类型
+  getAllProblemType: async (): Promise<ApiResponse<ProblemType[]>> => {
+    await delay();
+    return {
+      code: 200,
+      message: "获取成功",
+      data: mockProblemTypes,
+    };
+  },
+
+  // 创建问题类型
+  createProblemType: async (
+    type_text: string
+  ): Promise<ApiResponse<ProblemType>> => {
+    await delay();
+
+    const newType: ProblemType = {
+      type_id: "type-" + Date.now(),
+      type_text,
+    };
+
+    mockProblemTypes.push(newType);
+
+    return {
+      code: 200,
+      message: "上传成功",
+      data: newType,
+    };
+  },
+
+  // 删除问题类型
+  deleteProblemTypeById: async (
+    type_id: string
+  ): Promise<ApiResponse<{ type_id: string }>> => {
+    await delay();
+
+    const typeIndex = mockProblemTypes.findIndex((t) => t.type_id === type_id);
+    if (typeIndex !== -1) {
+      mockProblemTypes.splice(typeIndex, 1);
+      return {
+        code: 200,
+        message: "删除成功",
+        data: { type_id },
+      };
+    }
+
+    return {
+      code: 404,
+      message: "问题类型不存在",
     };
   },
 };
 
 // 模拟环境问题相关API
 export const mockProblemApi = {
-  // 获取问题列表
-  getProblems: async (
-    params: {
-      communityId?: string;
-      status?: string;
-      category?: string;
-      page?: number;
-      pageSize?: number;
-    } = {}
-  ): Promise<PaginatedResponse<EnvironmentProblem>> => {
-    await delay();
-
-    const { communityId, status, category, page = 1, pageSize = 10 } = params;
-
-    let filteredProblems = [...mockProblems];
-
-    if (communityId) {
-      filteredProblems = filteredProblems.filter(
-        (p) => p.communityId === communityId
-      );
+  // 上传问题（含图片）
+  uploadProblem: async (
+    filePath: string,
+    data: {
+      title: string;
+      community_id: string;
+      type_id: string;
+      location: string;
+      user_id?: string;
     }
+  ): Promise<ApiResponse<{ problem_id: string }>> => {
+    await delay(1000);
 
-    if (status) {
-      filteredProblems = filteredProblems.filter((p) => p.status === status);
-    }
-
-    if (category) {
-      filteredProblems = filteredProblems.filter(
-        (p) => p.category === category
-      );
-    }
-
-    const total = filteredProblems.length;
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    const paginatedProblems = filteredProblems.slice(startIndex, endIndex);
-
-    return {
-      success: true,
-      data: paginatedProblems,
-      pagination: {
-        page,
-        pageSize,
-        total,
-        totalPages: Math.ceil(total / pageSize),
-      },
-    };
-  },
-
-  // 根据ID获取问题详情
-  getProblemById: async (
-    id: string
-  ): Promise<ApiResponse<EnvironmentProblem>> => {
-    await delay();
-    const problem = mockProblems.find((p) => p.id === id);
-
-    if (problem) {
-      return {
-        success: true,
-        data: problem,
-      };
-    }
-
-    return {
-      success: false,
-      message: "问题不存在",
-    };
-  },
-
-  // 创建问题
-  createProblem: async (
-    problem: Omit<EnvironmentProblem, "id" | "createTime" | "updateTime">
-  ): Promise<ApiResponse<EnvironmentProblem>> => {
-    await delay();
-
+    const problem_id = "problem-" + Date.now();
     const newProblem: EnvironmentProblem = {
-      ...problem,
-      id: "problem-" + Date.now(),
-      createTime: Date.now(),
-      updateTime: Date.now(),
-      status: "pending",
+      problem_id,
+      user_id: data.user_id || mockUsers[0].user_id,
+      community_id: data.community_id,
+      type_id: data.type_id,
+      title: data.title,
+      location: data.location,
+      image_path: `uploads/${Math.random().toString(16).substr(2, 12)}.jpg`,
+      status: 0,
+      created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
     };
 
     mockProblems.push(newProblem);
 
     return {
-      success: true,
-      data: newProblem,
+      code: 200,
+      message: "上传成功",
+      data: { problem_id },
     };
   },
 
-  // 更新问题状态
-  updateProblemStatus: async (
-    id: string,
-    status: string
-  ): Promise<ApiResponse<EnvironmentProblem>> => {
-    await delay();
-    const problemIndex = mockProblems.findIndex((p) => p.id === id);
+  // 上传整改图片
+  resolveProblem: async (
+    filePath: string,
+    data: {
+      problem_id: string;
+      user_id?: string;
+    }
+  ): Promise<ApiResponse> => {
+    await delay(1000);
 
+    const problemIndex = mockProblems.findIndex(
+      (p) => p.problem_id === data.problem_id
+    );
     if (problemIndex !== -1) {
       mockProblems[problemIndex] = {
         ...mockProblems[problemIndex],
-        status,
-        updateTime: Date.now(),
+        resolved_image_path: `uploads/${Math.random()
+          .toString(16)
+          .substr(2, 12)}.jpg`,
+        status: 1,
+        resolved_by: data.user_id || mockUsers[0].user_id,
+        resolved_at: new Date().toISOString().slice(0, 19).replace("T", " "),
       };
 
       return {
-        success: true,
-        data: mockProblems[problemIndex],
+        code: 200,
+        message: "整改完成",
       };
     }
 
     return {
-      success: false,
+      code: 404,
       message: "问题不存在",
     };
   },
 
-  // 上传整改照片
-  uploadFixPhotos: async (
-    id: string,
-    photos: string[],
-    description?: string
+  // 按社区ID获取问题列表
+  getProblemByCommunityId: async (
+    community_id: string
+  ): Promise<ApiResponse<EnvironmentProblem[]>> => {
+    await delay();
+
+    const filteredProblems = mockProblems.filter(
+      (p) => p.community_id === community_id
+    );
+
+    return {
+      code: 200,
+      message: "获取成功",
+      data: filteredProblems,
+    };
+  },
+
+  // 按问题ID获取详情
+  getProblemById: async (
+    problem_id: string
   ): Promise<ApiResponse<EnvironmentProblem>> => {
     await delay();
-    const problemIndex = mockProblems.findIndex((p) => p.id === id);
+    const problem = mockProblems.find((p) => p.problem_id === problem_id);
 
-    if (problemIndex !== -1) {
-      mockProblems[problemIndex] = {
-        ...mockProblems[problemIndex],
-        fixPhotos: photos,
-        fixDescription: description,
-        status: "fixed",
-        updateTime: Date.now(),
-      };
-
+    if (problem) {
       return {
-        success: true,
-        data: mockProblems[problemIndex],
+        code: 200,
+        message: "获取成功",
+        data: problem,
       };
     }
 
     return {
-      success: false,
+      code: 404,
       message: "问题不存在",
     };
   },
-};
 
-// 模拟文件上传API
-export const mockUploadApi = {
-  // 上传图片
-  uploadImage: async (
-    filePath: string
-  ): Promise<ApiResponse<{ url: string }>> => {
-    await delay(1000); // 模拟上传时间
+  // 按问题类型获取所有问题
+  getProblemByTypeId: async (
+    type_id: string
+  ): Promise<ApiResponse<EnvironmentProblem[]>> => {
+    await delay();
 
-    // 模拟上传成功，返回一个假的图片URL
-    const mockImageUrl = `https://picsum.photos/400/300?random=${Date.now()}`;
+    const filteredProblems = mockProblems.filter((p) => p.type_id === type_id);
 
     return {
-      success: true,
-      data: {
-        url: mockImageUrl,
-      },
+      code: 200,
+      message: "获取成功",
+      data: filteredProblems,
     };
   },
 
-  // 批量上传图片
-  uploadImages: async (
-    filePaths: string[]
-  ): Promise<ApiResponse<{ urls: string[] }>> => {
-    try {
-      const uploadPromises = filePaths.map((filePath) =>
-        mockUploadApi.uploadImage(filePath)
-      );
-      const results = await Promise.all(uploadPromises);
+  // 按社区和类型获取问题
+  getProblemByTypeIdAndCommunityId: async (
+    type_id: string,
+    community_id: string
+  ): Promise<ApiResponse<EnvironmentProblem[]>> => {
+    await delay();
 
-      const urls = results.map((result) => result.data?.url).filter(Boolean);
+    const filteredProblems = mockProblems.filter(
+      (p) => p.type_id === type_id && p.community_id === community_id
+    );
 
-      return {
-        success: true,
-        data: { urls },
-      };
-    } catch (error) {
-      return {
-        success: false,
-        message: "批量上传失败",
-      };
-    }
+    return {
+      code: 200,
+      message: "获取成功",
+      data: filteredProblems,
+    };
   },
 };

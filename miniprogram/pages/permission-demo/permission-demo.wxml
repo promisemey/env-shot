@@ -9,11 +9,11 @@
     
     <view class="user-card">
       <view class="user-avatar">
-        <t-icon name="{{userInfo.role === 'admin' ? 'user-setting' : 'user'}}" size="48rpx" color="#1296db"></t-icon>
+        <t-icon name="{{userInfo.role === 1 ? 'user-setting' : 'user'}}" size="48rpx" color="#1296db"></t-icon>
       </view>
       <view class="user-details">
         <text class="user-name">{{userInfo.name || '未登录'}}</text>
-        <text class="user-role">{{userInfo.role === 'admin' ? '管理员' : userInfo.role === 'user' ? '普通用户' : '未知角色'}}</text>
+        <text class="user-role">{{userInfo.role === 1 ? '管理员' : userInfo.role === 0 ? '普通用户' : '未知角色'}}</text>
         <text class="user-phone">{{userInfo.phone || '无手机号'}}</text>
         <text class="user-community" wx:if="{{userInfo.communityId}}">所属社区: {{communityName}}</text>
       </view>

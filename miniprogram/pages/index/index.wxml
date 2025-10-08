@@ -10,7 +10,7 @@
         </view>
         <text class="app-name">社区环境管理</text>
         <text class="welcome-text">欢迎使用，{{userInfo.name || '用户'}}</text>
-        <text class="user-role"> {{userInfo.role === 'admin' ? '管理员' : '社区用户'}}</text>
+        <text class="user-role"> {{userInfo.role === 1 ? '管理员' : '社区用户'}}</text>
       </view>
     </view>
   </view>

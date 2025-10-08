@@ -1,151 +1,19 @@
 // pages/admin/problem-upload/problem-upload.ts
-import { problemApi, uploadApi } from "../../../services/api";
-import { Community } from "../../../types/index";
-
-// 固定的社区列表
-const FIXED_COMMUNITIES: Community[] = [
-  {
-    id: "1",
-    name: "社区",
-    address: "社区地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "2",
-    name: "杨公",
-    address: "杨公地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "3",
-    name: "大桥",
-    address: "大桥地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "4",
-    name: "朱集",
-    address: "朱集地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "5",
-    name: "双庙",
-    address: "双庙地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "6",
-    name: "陈庙",
-    address: "陈庙地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "7",
-    name: "汤王",
-    address: "汤王地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "8",
-    name: "黄圩",
-    address: "黄圩地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "9",
-    name: "杨郢",
-    address: "杨郢地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "10",
-    name: "胡岗",
-    address: "胡岗地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "11",
-    name: "杨祠",
-    address: "杨祠地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "12",
-    name: "桃园",
-    address: "桃园地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-  {
-    id: "13",
-    name: "前瓦",
-    address: "前瓦地址",
-    latitude: 0,
-    longitude: 0,
-    createTime: Date.now(),
-    updateTime: Date.now(),
-  },
-];
+import { problemApi, communityApi, typeApi } from "../../../services/api";
+import { Community, ProblemType } from "../../../types/index";
 
 interface ProblemUploadPageData {
   communities: Community[];
   selectedCommunityIndex: number;
   selectedCommunity: Community | null;
   selectedCommunityText: string;
-  description: string;
-  categories: Array<{
-    value: string;
-    label: string;
-    icon: string;
-  }>;
-  selectedCategory: string;
-  severityOptions: Array<{
-    value: string;
-    label: string;
-  }>;
-  selectedSeverity: string;
+  title: string;
+  location: string;
+  problemTypes: ProblemType[];
+  selectedTypeIndex: number;
+  selectedType: ProblemType | null;
+  selectedTypeText: string;
   photos: string[];
-  location: {
-    latitude: number;
-    longitude: number;
-    address: string;
-  } | null;
   submitDisabled: boolean;
   submitBtnText: string;
   submitting: boolean;
@@ -153,35 +21,53 @@ interface ProblemUploadPageData {
 
 Page<ProblemUploadPageData, any>({
   data: {
-    communities: FIXED_COMMUNITIES,
+    communities: [],
     selectedCommunityIndex: -1,
     selectedCommunity: null,
     selectedCommunityText: "",
-    description: "",
-    categories: [
-      { value: "garbage", label: "垃圾处理", icon: "delete" },
-      { value: "water", label: "水质问题", icon: "circle" },
-      { value: "air", label: "空气质量", icon: "cloud" },
-      { value: "noise", label: "噪音污染", icon: "sound" },
-      { value: "green", label: "绿化问题", icon: "radish-filled" },
-      { value: "other", label: "其他问题", icon: "bulletpoint" },
-    ],
-    selectedCategory: "",
-    severityOptions: [
-      { value: "low", label: "轻微" },
-      { value: "medium", label: "中等" },
-      { value: "high", label: "严重" },
-    ],
-    selectedSeverity: "",
+    title: "",
+    location: "",
+    problemTypes: [],
+    selectedTypeIndex: -1,
+    selectedType: null,
+    selectedTypeText: "",
     photos: [],
-    location: null,
-    submitDisabled: false,
+    submitDisabled: true,
     submitBtnText: "提交问题",
     submitting: false,
   },
 
   onLoad() {
-    // 页面加载时不需要特别处理
+    this.loadCommunities();
+    this.loadProblemTypes();
+  },
+
+  // 加载社区列表
+  async loadCommunities() {
+    try {
+      const res = await communityApi.getAllCommunity();
+      if (res.code === 200 && res.data) {
+        this.setData({
+          communities: res.data,
+        });
+      }
+    } catch (error) {
+      console.error("加载社区列表失败:", error);
+    }
+  },
+
+  // 加载问题类型
+  async loadProblemTypes() {
+    try {
+      const res = await typeApi.getAllProblemType();
+      if (res.code === 200 && res.data) {
+        this.setData({
+          problemTypes: res.data,
+        });
+      }
+    } catch (error) {
+      console.error("加载问题类型失败:", error);
+    }
   },
 
   // 社区选择
@@ -191,51 +77,48 @@ Page<ProblemUploadPageData, any>({
     this.setData({
       selectedCommunityIndex: index,
       selectedCommunity: community,
-      selectedCommunityText: community.name,
+      selectedCommunityText: community.community_text,
     });
     this.checkSubmitStatus();
   },
 
-  // 问题描述输入
-  onDescriptionInput(e: any) {
+  // 问题类型选择
+  onTypeChange(e: any) {
+    const index = e.detail.value;
+    const type = this.data.problemTypes[index];
     this.setData({
-      description: e.detail.value,
+      selectedTypeIndex: index,
+      selectedType: type,
+      selectedTypeText: type.type_text,
     });
     this.checkSubmitStatus();
   },
 
-  // 选择问题分类
-  selectCategory(e: any) {
-    const value = e.currentTarget.dataset.value;
+  // 问题标题输入
+  onTitleInput(e: any) {
     this.setData({
-      selectedCategory: value,
+      title: e.detail.value,
     });
     this.checkSubmitStatus();
   },
 
-  // 选择严重程度
-  selectSeverity(e: any) {
-    const value = e.currentTarget.dataset.value;
+  // 问题位置输入
+  onLocationInput(e: any) {
     this.setData({
-      selectedSeverity: value,
+      location: e.detail.value,
     });
     this.checkSubmitStatus();
   },
 
   // 检查提交状态
   checkSubmitStatus() {
-    const {
-      selectedCommunity,
-      description,
-      selectedCategory,
-      selectedSeverity,
-      photos,
-    } = this.data;
+    const { selectedCommunity, selectedType, title, location, photos } =
+      this.data;
     const canSubmit =
       selectedCommunity &&
-      description.trim().length > 0 &&
-      selectedCategory &&
-      selectedSeverity &&
+      selectedType &&
+      title.trim().length > 0 &&
+      location.trim().length > 0 &&
       photos.length > 0;
 
     this.setData({
@@ -290,75 +173,10 @@ Page<ProblemUploadPageData, any>({
     this.checkSubmitStatus();
   },
 
-  // 获取当前位置
-  getCurrentLocation() {
-    wx.showLoading({
-      title: "获取位置中...",
-    });
-
-    wx.getLocation({
-      type: "gcj02",
-      success: (res) => {
-        const { latitude, longitude } = res;
-
-        // 逆地理编码获取地址
-        wx.request({
-          url: `https://apis.map.qq.com/ws/geocoder/v1/?location=${latitude},${longitude}&key=YOUR_MAP_KEY`,
-          success: (addressRes: any) => {
-            wx.hideLoading();
-
-            if (addressRes.data.status === 0) {
-              const address = addressRes.data.result.address;
-              this.setData({
-                location: {
-                  latitude,
-                  longitude,
-                  address,
-                },
-              });
-            } else {
-              this.setData({
-                location: {
-                  latitude,
-                  longitude,
-                  address: "位置获取成功，但地址解析失败",
-                },
-              });
-            }
-          },
-          fail: () => {
-            wx.hideLoading();
-            this.setData({
-              location: {
-                latitude,
-                longitude,
-                address: "位置获取成功，但地址解析失败",
-              },
-            });
-          },
-        });
-      },
-      fail: (error) => {
-        wx.hideLoading();
-        console.error("获取位置失败:", error);
-        wx.showToast({
-          title: "获取位置失败",
-          icon: "none",
-        });
-      },
-    });
-  },
-
   // 提交问题
   async submitProblem() {
-    const {
-      selectedCommunity,
-      description,
-      selectedCategory,
-      selectedSeverity,
-      photos,
-      location,
-    } = this.data;
+    const { selectedCommunity, selectedType, title, location, photos } =
+      this.data;
 
     // 验证必填字段
     if (!selectedCommunity) {
@@ -369,25 +187,25 @@ Page<ProblemUploadPageData, any>({
       return;
     }
 
-    if (!description.trim()) {
+    if (!selectedType) {
       wx.showToast({
-        title: "请填写问题描述",
+        title: "请选择问题类型",
         icon: "none",
       });
       return;
     }
 
-    if (!selectedCategory) {
+    if (!title.trim()) {
       wx.showToast({
-        title: "请选择问题分类",
+        title: "请填写问题标题",
         icon: "none",
       });
       return;
     }
 
-    if (!selectedSeverity) {
+    if (!location.trim()) {
       wx.showToast({
-        title: "请选择严重程度",
+        title: "请填写问题位置",
         icon: "none",
       });
       return;
@@ -408,49 +226,28 @@ Page<ProblemUploadPageData, any>({
         submitBtnText: "提交中...",
       });
 
-      // 上传照片
-      wx.showLoading({
-        title: "上传照片中...",
-      });
-
-      const uploadRes = await uploadApi.uploadImages(photos);
-
-      if (!uploadRes.success || !uploadRes.data) {
-        throw new Error("照片上传失败");
-      }
-
-      wx.hideLoading();
-
       // 获取用户信息
       const userInfo = wx.getStorageSync("userInfo");
 
       // 构建问题数据
-      const problemDataToSubmit = {
-        communityId: selectedCommunity.id,
-        title: `${selectedCommunity.name}${this.getCategoryText(
-          selectedCategory
-        )}`,
-        description: description.trim(),
-        category: selectedCategory as any,
-        severity: selectedSeverity as any,
-        status: "pending" as const,
-        photos: uploadRes.data.urls,
-        reporterId: userInfo.id,
-        reporterName: userInfo.name,
-        reporterPhone: userInfo.phone,
-        location: location || {
-          latitude: 0,
-          longitude: 0,
-          address: "位置信息未获取",
-        },
-        createTime: Date.now(),
-        updateTime: Date.now(),
+      const problemData = {
+        title: title.trim(),
+        community_id: selectedCommunity.community_id,
+        type_id: selectedType.type_id,
+        location: location.trim(),
+        user_id: userInfo?.user_id,
       };
 
-      // 提交问题
-      const res = await problemApi.createProblem(problemDataToSubmit);
+      wx.showLoading({
+        title: "上传中...",
+      });
 
-      if (res.success) {
+      // 上传问题（包含图片）
+      const res = await problemApi.uploadProblem(photos[0], problemData);
+
+      wx.hideLoading();
+
+      if (res.code === 200) {
         wx.showToast({
           title: "提交成功",
           icon: "success",
@@ -461,11 +258,12 @@ Page<ProblemUploadPageData, any>({
           selectedCommunityIndex: -1,
           selectedCommunity: null,
           selectedCommunityText: "",
-          description: "",
-          selectedCategory: "",
-          selectedSeverity: "",
+          selectedTypeIndex: -1,
+          selectedType: null,
+          selectedTypeText: "",
+          title: "",
+          location: "",
           photos: [],
-          location: null,
         });
 
         // 返回上一页
@@ -480,6 +278,7 @@ Page<ProblemUploadPageData, any>({
       }
     } catch (error) {
       console.error("提交问题失败:", error);
+      wx.hideLoading();
       wx.showToast({
         title: "提交失败，请重试",
         icon: "none",
@@ -491,18 +290,5 @@ Page<ProblemUploadPageData, any>({
         submitBtnText: "提交问题",
       });
     }
-  },
-
-  // 获取分类文本
-  getCategoryText(category: string): string {
-    const categoryMap: { [key: string]: string } = {
-      garbage: "垃圾处理问题",
-      water: "水质问题",
-      air: "空气质量问题",
-      noise: "噪音污染问题",
-      green: "绿化问题",
-      other: "环境问题",
-    };
-    return categoryMap[category] || "环境问题";
   },
 });

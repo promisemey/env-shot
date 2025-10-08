@@ -1,7 +1,6 @@
 // pages/login/login.ts
 import { userApi } from "../../services/api";
 import { AuthManager } from "../../utils/auth";
-import { User } from "../../types/index";
 
 interface LoginPageData {
   phone: string;
@@ -39,12 +38,15 @@ Page<LoginPageData, any>({
   // 检查登录状态
   async checkLoginStatus() {
     try {
-      const res = await userApi.getUserInfo();
-      if (res.success && res.data) {
-        wx.setStorageSync("userInfo", res.data);
-        wx.switchTab({
-          url: "/pages/index/index",
-        });
+      const userInfo = wx.getStorageSync("userInfo");
+      if (userInfo && userInfo.user_id) {
+        const res = await userApi.getUserInfoById(userInfo.user_id);
+        if (res.code === 200 && res.data) {
+          wx.setStorageSync("userInfo", res.data);
+          wx.switchTab({
+            url: "/pages/index/index",
+          });
+        }
       }
     } catch (error) {
       console.error("检查登录状态失败:", error);
@@ -92,24 +94,12 @@ Page<LoginPageData, any>({
         codeBtnText: "发送中...",
       });
 
-      const res = await userApi.sendSmsCode(phone);
-
-      if (res.success) {
-        wx.showToast({
-          title: "验证码已发送",
-          icon: "success",
-        });
-        this.startCountdown();
-      } else {
-        wx.showToast({
-          title: res.message || "发送失败",
-          icon: "none",
-        });
-        this.setData({
-          codeBtnDisabled: false,
-          codeBtnText: "获取验证码",
-        });
-      }
+      // 模拟发送验证码成功
+      wx.showToast({
+        title: "验证码已发送",
+        icon: "success",
+      });
+      this.startCountdown();
     } catch (error) {
       console.error("发送验证码失败:", error);
       wx.showToast({
@@ -173,68 +163,10 @@ Page<LoginPageData, any>({
         loginBtnText: "登录中...",
       });
 
-      // 模拟登录逻辑 - 根据手机号判断用户角色
-      let userRole: "admin" | "user" = "user";
-      let userName = "普通用户";
-      let communityId = "1"; // 默认社区
-
-      // 管理员手机号规则：以138开头的为管理员
-      if (phone.startsWith("138")) {
-        userRole = "admin";
-        userName = "系统管理员";
-        communityId = ""; // 管理员不固定社区
-      } else {
-        // 普通用户根据手机号后两位分配社区
-        const lastTwoDigits = parseInt(phone.slice(-2));
-        communityId = String((lastTwoDigits % 13) + 1);
-      }
-
-      // 构造用户信息
-      const mockUser: User = {
-        id: `user_${phone}`,
-        phone: phone,
-        name: userName,
-        role: userRole,
-        communityId: userRole === "user" ? communityId : undefined,
-        createTime: Date.now(),
-        updateTime: Date.now(),
-      };
-
-      // 模拟token
-      const mockToken = `mock_token_${Date.now()}_${phone}`;
-
-      // 保存用户信息和token
-      wx.setStorageSync("token", mockToken);
-      wx.setStorageSync("userInfo", mockUser);
-
-      // 更新全局用户信息
-      const app = getApp<IAppOption>();
-      app.updateUserInfo(mockUser);
-
-      wx.showToast({
-        title: "登录成功",
-        icon: "success",
-      });
-
-      // 根据用户角色跳转到对应页面
-      setTimeout(() => {
-        const defaultPage = AuthManager.getDefaultPageForRole();
-        if (defaultPage.includes("admin") || defaultPage.includes("user")) {
-          wx.switchTab({
-            url: defaultPage,
-          });
-        } else {
-          wx.switchTab({
-            url: "/pages/index/index",
-          });
-        }
-      }, 1500);
-
-      // 原有的API调用逻辑（注释掉，供参考）
-      /*
+      // 调用登录API
       const res = await userApi.loginByPhone(phone, code);
 
-      if (res.success && res.data) {
+      if (res.code === 200 && res.data) {
         // 保存用户信息和token
         wx.setStorageSync("token", res.data.token);
         wx.setStorageSync("userInfo", res.data.user);
@@ -244,12 +176,9 @@ Page<LoginPageData, any>({
           icon: "success",
         });
 
-        // 跳转到首页
-        setTimeout(() => {
-          wx.switchTab({
-            url: "/pages/index/index",
-          });
-        }, 1500);
+        wx.switchTab({
+          url: "/pages/index/index",
+        });
       } else {
         wx.showToast({
           title: res.message || "登录失败",
@@ -260,7 +189,6 @@ Page<LoginPageData, any>({
           loginBtnText: "登录",
         });
       }
-      */
     } catch (error) {
       console.error("登录失败:", error);
       wx.showToast({
@@ -332,18 +260,18 @@ Page<LoginPageData, any>({
       console.log("微信登录数据:", loginData);
 
       // 3. 调用后端微信登录接口
-      const res = await userApi.loginByWechat(loginData);
+      const wechatLoginData = {
+        code: loginCode.code,
+        nickname: userInfo.userInfo?.nickName,
+        avatar: userInfo.userInfo?.avatarUrl,
+      };
 
-      if (res.success && res.data) {
+      const res = await userApi.loginByWechat(wechatLoginData);
+
+      if (res.code === 200 && res.data) {
         // 保存用户信息和token
         wx.setStorageSync("token", res.data.token);
         wx.setStorageSync("userInfo", res.data.user);
-
-        // 更新全局用户信息
-        const app = getApp();
-        if (app.globalData) {
-          app.globalData.userInfo = res.data.user;
-        }
 
         wx.showToast({
           title: "登录成功",
